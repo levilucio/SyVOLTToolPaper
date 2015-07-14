@@ -21,17 +21,17 @@
 
 \newcommand{\bentley}[1]{\chunk{Bentley}{\textbf{\textcolor{green}{\textsl{#1}}}}}
 \newcommand{\levi}[1]{\chunk{Levi}{\textbf{\textcolor{red}{\textsl{#1}}}}}
-\newcommand{\manuel}[1]{\chunk{Manuel}{\textbf{\textcolor{blue}{\textsl{#1}}}}}
-\newcommand{\javi}[1]{\chunk{Javi}{\textbf{\textcolor{brown}{\textsl{#1}}}}}
+\newcommand{\claudio}[1]{\chunk{Manuel}{\textbf{\textcolor{blue}{\textsl{#1}}}}}
 
 \begin{document}
-\title{SyVOLT - A Model Transformation Verifier}
+\title{Building the SyVOLT Tool}
 %\title{Full Verification of Model Transformation Contracts for Declarative ATL}
 \author{Levi L\'{u}cio, Bentley James Oakes, Claudio Gomes, Hans Vangheluwe}
 
 \author{\IEEEauthorblockN{Levi L\'{u}cio\IEEEauthorrefmark{1},
-			Bentley James Oakes\IEEEauthorrefmark{1}, and
-			Claudio Gomes\IEEEauthorrefmark{2}}
+			Bentley James Oakes\IEEEauthorrefmark{1},
+			Claudio Gomes\IEEEauthorrefmark{2} and
+			Hans Vangheluwe\IEEEauthorrefmark{2}}
 		\IEEEauthorblockA{\IEEEauthorrefmark{1}School of Computer Science,
 			McGill University,
 			Canada\\ levi@cs.mcgill.ca, bentley.oakes@mail.mcgill.ca}
@@ -50,74 +50,52 @@
 
 
 \begin{abstract}
-
-
-We introduce SyVOLT, a plugin for the Eclipse development environment for the verification of structural contracts on model transformations. The plugin allows the user to build transformations in our transformation language DSLTrans using a visual editor. The pre-/post- condition contracts to be proved on the transformation can also be built in a similar interface.
-
-Our contract proving process is exhaustive, meaning that if a contract is said to hold, then the contract will hold for all input models of a transformation. If the contract will not hold, then the input model counter-examples where the contract fails will be presented.
-
-Demo: \url{https://www.youtube.com/watch?v=8PrR5RhPptY}
-
-
+A paper on SyVOLT, should explain the tool from three points of view:
+\begin{itemize}
+  \item components of the architecture of the tool
+  \item case studies, growing in complexity
+  \item model driven engineering
+\end{itemize}
 
 \end{abstract}
 
 
 \section{Introduction}
 \label{sec:intro}
-%\input{text/introduction}
+\input{text/introduction}
 
-(from models paper?)
--manual for syvolt
-
-\section{DSLTrans}
-\label{sec:DSLTrans}
-%\input{text/DSLTrans}
-
+\section{Dsltrans}
+Families to persons example.
 \section{Prover Overview}
-\label{sec:overview}
-%\input{text/overview}
+Just from the user point of view, how do we build the transformation and
+verify.\\
+Methodological workflow.
+\subsection{Eclipse Plugin}
+\subsection{Expressing Properties}
+Limits of property language expressiveness.
+\subsection{Wirlwind tour of SyVOLT}
+Using counterexamples to fix the transformation.\\
+Using SyVOLT for certification.
+\section{Model-Driven Architecture}
+Assumption that we can do it in a model-driven way.\\
+Graph rewriting vs GPL.
+\subsection{Pyramify}
+\subsection{PC generation}
+\subsection{Property proof}
+\section{mbeddr Industrial Case Studies}
+The Idea here is to indroduce the features that had to be implemented for the
+approach to work/scale for each one of the cases studies, from the simplest to
+the most complex.
+\subsection{Slicing}
+\section{Discussions (scalability/insights into
+applying model driven techniques/applicability/industrial use)}
+List of observations\\
+Discussing limitations of model-driven technology here.
 
-
-\section{Eclipse Plugin}
-\label{sec:plugin}
-%\input{text/plugin}
-
-\section{Artifacts}
-\label{sec:artifacts}
-%\input{text/artifacts}
-
-\section{PyRamify}
-\label{sec:pyramify}
-%\input{text/pyramify}
-
-\section{Path Condition Generation}
-\label{sec:pc_gen}
-%\input{text/pc_gen}
-
-\section{Contract Proof}
-\label{sec:contact_proof}
-%\input{text/contact_proof}
-
-\section{Discussions}
-\label{sec:discussions}
-%\input{text/discussions}
- (scalability/insights into modelling/applicability/industrial use)
-
-\section{Related Work}
-\label{sec:related}
-%\input{text/related}
-
-\section{Conclusion}
-\label{sec:conclusion}
-%\input{text/conclusion}
+\section{Conclusions}
 
 \section*{Acknowledgements}
-The authors warmly thank Gehan Selim for her work on the
-implementation of the contract prover. Bentley Oakes and Levi L\'ucio are
-researchers working for the NECSIS project, funded by the Automotive Partnership
-Canada. %The work of Javier Troya and Manuel Wimmer is funded by the European
-%Commission under ICT Policy Support Programme, grant no. 317859.
+acknowledgements here\ldots
 
 \bibliographystyle{abbrv}
 \bibliography{syvolt-tool}
