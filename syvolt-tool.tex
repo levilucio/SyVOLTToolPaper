@@ -1,0 +1,112 @@
+\documentclass[conference]{IEEEtran}
+%\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{AMMALanguages}
+\usepackage[table]{xcolor}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{cleveref}
+\usepackage{url}
+
+\input{commentSupport}
+
+\newcommand{\chunk}[2]{%
+	\fcolorbox{black}{yellow}{\bfseries\sffamily\scriptsize#1}%
+   {$\blacktriangleright$#2$\blacktriangleleft$}%
+}
+
+\newcommand{\bentley}[1]{\chunk{Bentley}{\textbf{\textcolor{green}{\textsl{#1}}}}}
+\newcommand{\levi}[1]{\chunk{Levi}{\textbf{\textcolor{red}{\textsl{#1}}}}}
+\newcommand{\manuel}[1]{\chunk{Manuel}{\textbf{\textcolor{blue}{\textsl{#1}}}}}
+\newcommand{\javi}[1]{\chunk{Javi}{\textbf{\textcolor{brown}{\textsl{#1}}}}}
+
+\begin{document}
+\title{SyVOLT - A Model Transformation Verifier}
+%\title{Full Verification of Model Transformation Contracts for Declarative ATL}
+\author{Levi L\'{u}cio, Bentley James Oakes, Claudio Gomes, Hans Vangheluwe}
+
+\author{\IEEEauthorblockN{Levi L\'{u}cio\IEEEauthorrefmark{1},
+			Bentley James Oakes\IEEEauthorrefmark{1}, and
+			Claudio Gomes\IEEEauthorrefmark{2}}
+		\IEEEauthorblockA{\IEEEauthorrefmark{1}School of Computer Science,
+			McGill University,
+			Canada\\ levi@cs.mcgill.ca, bentley.oakes@mail.mcgill.ca}
+		\IEEEauthorblockA{\IEEEauthorrefmark{2}MSDL Lab,
+			U of Antwerp,
+			Antwerp\\ \{claudio\}@internet}
+	}
+
+\date{\today}
+
+
+\maketitle
+
+%\tableofcontents
+
+
+
+\begin{abstract}
+
+
+We introduce SyVOLT, a plugin for the Eclipse development environment for the verification of structural contracts on model transformations. The plugin allows the user to build transformations in our transformation language DSLTrans using a visual editor. The pre-/post- condition contracts to be proved on the transformation can also be built in a similar interface.
+
+Our contract proving process is exhaustive, meaning that if a contract is said to hold, then the contract will hold for all input models of a transformation. If the contract will not hold, then the input model counter-examples where the contract fails will be presented.
+
+Demo: \url{https://www.youtube.com/watch?v=8PrR5RhPptY}
+
+
+
+\end{abstract}
+
+
+\section{Introduction}
+\label{sec:intro}
+%\input{text/introduction}
+
+\section{Highlights}
+\label{sec:highlights}
+%\input{text/highlights}
+
+\section{Architecture}
+\label{sec:arch}
+%\input{text/arch}
+%
+%\section{Mapping ATL into DSLTrans}
+%\label{sec:mapping}
+%\input{text/mapping}
+%
+%% \section{Transformation to DSLTrans}
+%% \label{sec:transformation}
+%% \input{text/hot}
+%
+%%\section{Properties and Property Prover}
+%%\label{sec:prover}
+%%\input{text/prover}
+%
+%\section{Results and Discussion}
+%\label{sec:results}
+%\input{text/results}
+%
+%
+%\section{Related Work}
+%\label{sec:related}
+%\input{text/related}
+%
+%\section{Conclusion}
+%\label{sec:conclusion}
+%\input{text/conclusion}\vspace{-.5cm}
+
+\section*{Acknowledgements}
+The authors warmly thank Gehan Selim for her work on the
+implementation of the contract prover. Bentley Oakes and Levi L\'ucio are
+researchers working for the NECSIS project, funded by the Automotive Partnership
+Canada. %The work of Javier Troya and Manuel Wimmer is funded by the European
+%Commission under ICT Policy Support Programme, grant no. 317859.
+
+\bibliographystyle{abbrv}
+\bibliography{models2015}
+\end{document}
