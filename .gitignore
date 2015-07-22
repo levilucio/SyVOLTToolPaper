@@ -6,3 +6,5 @@
 *.log
 *.bib.bak
 /tmp/
+.project
+.gitignore
