@@ -27,8 +27,8 @@ The following model-driven development tools have been used either as part of
 SyVOLT's codebase, or for SyVOLT's development:
 \begin{itemize}
 
-  \item \textbf{AToM$^3$}~\cite{}: AToM$^3$ is a meta-editor for model-driven
-  development. It has been developed at the MSDL and is used for constructing,
+  \item \textbf{AToM$^3$}~\cite{atom3:2002}: AToM$^3$ is a meta-editor for
+  model-driven development. It has been developed at the MSDL and is used for constructing,
   models, metamodels and model transformation rules, and for automatically
   synthesising modeling environments.
   AToM$^3$ has been extensively used to give support to the construction and
@@ -40,7 +40,7 @@ SyVOLT's codebase, or for SyVOLT's development:
   generated from their graphical representations in the Eclipse front-end.\\
 
   \item \textbf{Himesis}~\cite{Provost2006}: Himesis is a typed graph representation
-  format, built upon the open-source igraph~\cite{} library. 
+  format, built upon the open-source igraph~\cite{igraphTool} library. 
 Himesis is used for several reasons: independence, efficiency and tool support.
 Independence is ensured because Himesis is very expressive and also very simple,
 which means it will not change for the foreseeable future.
@@ -64,14 +64,14 @@ supported by T-Core.
   T-Core is also an explicitly modeled model transformation language, a T-Core
   model transformation rule is also a (Himesis) model.\\
 
-  \item \textbf{EMF} (Eclipse Modelling Framework)~\cite{}: SyVOLT makes use of
-  EMF's E-Core format for the XMI~\footnote{\url{http://www.omg.org/spec/XMI/}} representation of DSLTrans transformations
+  \item \textbf{EMF} (Eclipse Modelling Framework)~\cite{emfTool}: SyVOLT makes
+  use of EMF's E-Core format for the XMI~\footnote{\url{http://www.omg.org/spec/XMI/}} representation of DSLTrans transformations
   and SyVOLT's contracts within the Eclipse editors. Note that EMF is only used
   in the Eclipse front-end, and that Ecore models are converted into
   the Himesis format for the contract prover engine to compute the
   proofs.\\
-  \item \textbf{EGL} (Epsilon Generation Language)~\cite{}: Converting Ecore
-  models into Himesis models is achieved using EGL, a language from the Epsilon
+  \item \textbf{EGL} (Epsilon Generation Language)~\cite{eglTool}: Converting
+  Ecore models into Himesis models is achieved using EGL, a language from the Epsilon
   family. Besides easy integration with Eclipse and native support of the expressive
 Epsilon Object Language (EOL~\cite{Kolovos}), EGL also provides tasks for the
 Ant~\footnote{\url{http://ant.apache.org}} build tool, which was used to
@@ -167,8 +167,9 @@ The translation of DSLTrans transformations and SyVOLT contracts into Himesis
 models and model transformation rules was achieved using the Epsilon Generation
 Language (EGL~\cite{Rose2008}). More specifically, two EGL model-to-text model
 transformations were used: one to generate the Himesis models
-representing of a DSLTrans transformation; another one to generate the T-Core
-model transformation rules necessary to prove SyVOLT contracts.
+representing of a DSLTrans transformation (marked (a) is Figure~\ref{fig:arch});
+another one to generate the T-Core model transformation rules necessary to prove
+SyVOLT contracts (marked (b) is Figure~\ref{fig:arch}).
 
 These model-to-text transformations are used to parse the Ecore models of a
 DSLTrans model transformation under analysis and of the contracts to be proved.
@@ -209,9 +210,9 @@ Construction: The PyRamify Script (3)}
 Additional model transformations, other than the ones described in
 Section~\ref{sec:gen_models_mt}, need to be generated for the property proof
 algorithm to execute. These are the \emph{path condition generation} T-Core
-model transformations (see Figure~\ref{fig:arch}) that are needed to perform the
-model manipulations for building a set of symbolic executions given a DSLTrans
-model transformation. These model transformations blocks allow combining the rules of a DSLTrans model
+model transformations (marked (c) is Figure~\ref{fig:arch}) that are needed to
+perform the model manipulations for building a set of symbolic executions given a DSLTrans
+model transformation. These model transformation blocks allow combining the rules of a DSLTrans model
 transformation into a set of \emph{path conditions}, as per the algorithm
 described in~\cite{Lucio2014}. Note that the path condition generation T-Core
 transformations are fully generated from the set of rules of the DSLTrans
@@ -220,9 +221,9 @@ transformation being verified.
 This additional model transformation generation step is achieved by the PyRamify
 component. PyRamify is a Python script that takes as input Himesis graphs
 representing the rules in the transformation. Then, through the RAMification
-procedure [CITE RAM], T-Core matchers and rewriters for each rule are produced.
-Very briefly, while matchers allow the contract prover to determine how
-rules might execute over a path condition being built, rewriters properly
+procedure~\ref{KuhneMSVW09}, T-Core matchers and rewriters for each rule are
+produced. Very briefly, while matchers allow the contract prover to determine
+how rules might execute over a path condition being built, rewriters properly
 combine the right-hand side of a DSLTrans rule with that same path condition
 whenever necessary.
 
@@ -242,8 +243,8 @@ DSLTrans rules by using EGL technology -- as was done for the artifacts
 described in Section~\ref{sec:gen_models_mt}. Nevertheless, a preferred solution for us would
 be to use model transformation technology that that explicitely allows
 building model transformations from simple models. To the best of our knowledge,
-model transformation technology that allows moving between models of an order 
-$n$ and an order $n+1$ is not yet available in the modelling community.
+model transformation technology that allows moving between models of a given
+order $n$ and an order $n+1$ is not yet available in the modelling community.
 
 \subsection{Path Condition Generation (4)}
 \label{sec:path_cond_gen}
@@ -253,40 +254,41 @@ condition generation step. Each path condition will represent an (infinite) set
 of concrete executions of the transformation, where each concrete execution is an
 input/ouput pair. Path condition generation is operationally achieved by
 executing, following the ordering of the rules in the DSLTrans
-tranformation being analysed, the \emph{path condition generation transformations} generated by the
-\emph{PyRamify} component. 
+tranformation being analysed, the path condition generation transformations
+(marked (c) is Figure~\ref{fig:arch}) generated by the \emph{PyRamify}
+component.
 
 The path condition generation algorithm starts from the empty path condition,
 representing the case where no rules in the transformation have executed. Then,
-as each T-Core transformation in the \emph{path condition generation
-transformations} set is executed, each rule in the DSLTrans model transformation
-under analysis is combined with the path conditions generated thus far. As each
-rule is considered, the set of path conditions will grow
-to represent all allowed combinations rules combinations. As the execution of a
-rule in a DSLTrans transformation may depend on the previous execution of other rules,
-such dependencies are verified by the \emph{path condition generation
-transformations} in order to exclude impossible rule combinations.
+as each T-Core transformation in the path condition generation transformations
+set is executed, each rule in the DSLTrans model transformation under analysis
+is combined with the path conditions generated thus far. As each rule is
+considered, the set of path conditions will grow to represent all allowed
+combinations rules combinations. As the execution of a rule in a DSLTrans
+transformation may depend on the previous execution of other rules, such
+dependencies are verified by the path condition generation
+transformations in order to exclude impossible rule combinations.
 
 % The final set of path conditions produced by the algorithm will then abstract
 % the infinite set of all concrete transformation executions. This is further
 % described in~\cite{Lucio2014}, along with a formal discussion of the validity
 % and completeness of this work.
 
-Note that \emph{path condition generation} is a complex task, difficult to fully
-model as a single model transformation. As such, the algorithm
+Note that path condition generation is a complex task, difficult to fully
+model as a single model transformation. As such, the algorithm in this component
 has been implemented as a Python script that is responsible for scheduling all the
-\emph{path condition generation transformations} in the right order. This programmatic level of granularity of
+path condition generation transformations in the right order. This programmatic level of granularity of
 manipulation has allowed us to build many optimizations to speed up the path
 condition generation process. Examples of such optimizations are the caching of
 expensive match operations, or the parallelization of the path condition generation algorithm. 
-
+ 
 \subsection{Contract Proof (5)}
 
 Once the path conditions are generated, the proof that each
 contract holds or does not hold can then be built. The \emph{contract proof}
 component requires two inputs: the \emph{path conditions set} built by the path
-condition generator; the \emph{property proof T-Core transformations}, generated by EGL model-to-text
-transformations as described in Section~\ref{sec:gen_models_mt}.
+condition generator (marked (d) is Figure~\ref{fig:arch}); the \emph{property
+proof T-Core transformations} (marked (b) is Figure~\ref{fig:arch}).
 
 Pre- / post- condition contracts form an implication, which needs to be
 checked for each path condition provided as input to the contract proof
@@ -297,7 +299,7 @@ and post- condition holds on a path condition is achieved by attempting to find 
 the path condition that is isomorphic to the pre-condition's model, a submodel
 of the path condition that is isomorphic to the post-condition's model. The
 computations on the existence of these sugraphs isomorphisms is done by
-the \emph{T-Core property proof transformations}. Note that, in this case, the
+the property proof T-Core transformations. Note that, in this case, the
 T-Core transformations are simply a set of matchers, or queries, as no further
 editing of the path conditions is necessary during this part of the proof.
 
@@ -306,9 +308,9 @@ Section~\ref{sec:path_cond_gen}, the contract proof algorithm has also been
 implemented as a Python script that schedules all the property proof T-Core
 transformations appropriately. As before, using fine-grained programmatic
 manipulations of the models and model transformations involved in the contract
-proof algorithm has allowed us to implement optimization strategies. The main
-of these strategies is the skipping of path conditions for which the contract
-is sure to hold without further analysis, given existing cached information
-about similar path conditions.
+proof algorithm has allowed us to implement optimization strategies during
+contract proof. The main of these strategies is the skipping of path conditions
+for which the contract is sure to hold without further analysis, given
+some existing cached information about similar path conditions.
 
 

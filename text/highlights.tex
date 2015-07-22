@@ -49,7 +49,7 @@ means to internally represent both symbolic executions and contracts. SyVOLT
 then reasons over these graphs to build a proof that contracts hold or do not
 hold. Note that by using a typed graph representation, our technique can prove
 contracts that include constraints on the attributes of the input and output
-models.
+models. 
 
 \levi{keep the text from here on?} An example of this would be in the
 Families-To-Persons transformation from the ATL zoo [CITE]. In this transformation, the name for a person in the
@@ -75,8 +75,8 @@ transformation. The soundness and completeness of our technique is described
 in~\cite{Lucio2014}.
 
 \subsection{Proving Contracts about ATL Model Transformations}
-The Atlas Transformation Language (ATL) is commonly-used in both industry and
-academia applications. In order to extend our approach into these domains, we
+The Atlas Transformation Language (ATL)~\cite{atlTool} is commonly-used in both
+industry and academia applications. In order to extend our approach into these domains, we
 have developed a higher-order transformation that is able to automatically
 transform declarative ATL transformations into our transformation language
 DSLTrans~\cite{Oakes}. This allows the user to also prove contracts on
@@ -129,14 +129,15 @@ in the future.
 \subsection{Integration with Eclipse}
 
 Eclipse is a popular development environment and model transformation
-tools such as ATL [CITE], DSLTrans [CITE] and EGL [CITE] are integrated with the
-Eclipse Modeling Framework (EMF) [CITE].
+tools such as ATL~\cite{atlTool}, DSLTrans~\cite{Barroca2011} and
+EGL~\cite{eglTool} are integrated with the Eclipse Modeling Framework
+(EMF)~\cite{emfTool}.
 
-To take advantage of this ecosystem, SyVolt integrates with EMF.
+To take advantage of this ecosystem, SyVOLT integrates with EMF.
 In the EMF, models can be represented in a multitude of syntaxes, from graphical
 to textual, and this makes the interaction with SyVolt easier since the modeler
-can use the model editor that is most convenient. Internally, SyVolt uses 
-the Himesis format [CITE] to represent models.
+can use the model editor that is most convenient. Internally, SyVOLT uses 
+the Himesis format~\cite{Provost2006} to represent models.
 
 %\subsection{Model Driven Developed GUI\levi{this text is subsumed by section
 %III a)}}
