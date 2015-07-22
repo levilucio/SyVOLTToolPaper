@@ -5,8 +5,8 @@ unique features, outlined below.
 
 \subsection{Graphical Modelling of Model Transformation Contracts}
 
-SyVOLT proves pre-/post-condition contracts hold for a transformation. Such
-contracts establish relations between patterns occurring in input and output
+SyVOLT proves pre-/post-condition contracts hold for a model transformation.
+Such contracts establish relations between patterns occurring in input and output
 models of a model transformation. If a contract holds, then a formal guarantee
 exists that whenever an input model contains the pattern specified in the
 pre-condition of the contract, the output model contains the pattern specified
@@ -25,8 +25,8 @@ logical expression to be used by the internal SyVolt prover.
 \subsection{Push-Button Proofs}
 \label{sec:push_button_proofs}
 SyVOLT is a verification tool that provides formal guarantees of correctness of
-a model transformation. The proving process is fully automatic and the all
-formal details are completely hidded from the user, who only needs to specify a
+a model transformation. The proving process is fully automatic and
+the all formal details are completely hidded from the user, who only needs to specify a
 set of contracts for the transformation being verified. Once the transformation and the
 contracts of interest are created, one command will start the property proving
 process. This process will automatically create all required artifacts (as
@@ -48,7 +48,7 @@ Our model transformation verification technique relies on typed graphs as the
 means to internally represent both symbolic executions and contracts. SyVOLT
 then reasons over these graphs to build a proof that contracts hold or do not
 hold. Note that by using a typed graph representation, our technique can prove
-contracts that include constraints on how the attributes of the input and output
+contracts that include constraints on the attributes of the input and output
 models.
 
 \levi{keep the text from here on?} An example of this would be in the
@@ -57,19 +57,21 @@ output graph is a concatenation of two strings \cgg{instead of ''strings``,
 should be ''attributes``} from elements in the input graph. Our contract prover
 can prove that this concatenation will be valid in all cases.
 
-\begin{figure*}
+\begin{figure}
 \centering
-\includegraphics[width=0.8\textwidth]{figures/output}
+\includegraphics[width=0.45\textwidth]{figures/output}
 \caption{The results of the contract prover}
 \label{fig:output}
-\end{figure*}
+\end{figure}
 
 \subsection{Input Independence and Exhaustiveness} 
 
 Our technique is exhaustive, in the sense that whenever a contract holds, it
-will hold for all possible input models to a transformation. SyVOLT thus proves
-contracts in an input-independent manner, relying only on the specification of
-the transformation. The soundness and completeness of our technique is described
+will hold for all possible input models to a transformation. This is possible
+because SyVOLT operates on specifications of outplace model transformations
+where unbounded loops and model element deletions are not allowed. SyVOLT thus proves
+contracts in an input-independent manner, relying only on the specification of the
+transformation. The soundness and completeness of our technique is described
 in~\cite{Lucio2014}.
 
 \subsection{Proving Contracts about ATL Model Transformations}
@@ -98,7 +100,7 @@ model transformation for giving semantics to the UML-RT language in terms of
 the Kiltera process language~\cite{PosseDingel2014}. SyVOLT's symbolic execution
 engine is fully homegrown~\cite{LucioVang} and does not depend on third-party
 solvers. Although this has implied a large effort to build the codebase, it has
-also allowed us to have the required control over the code to increasingly
+also allowed us to have the required control over the code to iteratively
 optimize the engine for both space and time economy. \cite{Selim2014}
 demonstrates that our prover is substantially faster than similar approaches based on SAT solvers.
 
@@ -136,21 +138,21 @@ to textual, and this makes the interaction with SyVolt easier since the modeler
 can use the model editor that is most convenient. Internally, SyVolt uses 
 the Himesis format [CITE] to represent models.
 
-\subsection{Model Driven Developed GUI\levi{this text is subsumed by section
-III a)}}
-\label{sec:mdd_gui}
+%\subsection{Model Driven Developed GUI\levi{this text is subsumed by section
+%III a)}}
+%\label{sec:mdd_gui}
 
-To take advantage of the productivity promised by MDD, we used a language called
-Eugenia[CITE] to develop the SyVolt contract editor shown in
-Figure~\ref{fig:eclipse_frontend}.
-With this approach, the SyVolt editor was developed in about 4 man-hours.
+%To take advantage of the productivity promised by MDD, we used a language
+% called Eugenia[CITE] to develop the SyVolt contract editor shown in
+%Figure~\ref{fig:eclipse_frontend}.
+%With this approach, the SyVolt editor was developed in about 4 man-hours.
 
-\begin{figure*}
+\begin{figure}
 \centering
-\includegraphics[width=0.8\textwidth]{figures/eclipse_frontend}
+\includegraphics[width=0.45\textwidth]{figures/eclipse_frontend}
 \caption{The transformation editor within Eclipse}
 \label{fig:eclipse_frontend}
-\end{figure*}
+\end{figure}
 
 
 
