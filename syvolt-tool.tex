@@ -10,7 +10,7 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{cleveref}
-\usepackage{url}
+\usepackage{url} 
 
 \input{commentSupport}
 
@@ -21,23 +21,29 @@
 
 \newcommand{\bentley}[1]{\chunk{Bentley}{\textbf{\textcolor{green}{\textsl{#1}}}}}
 \newcommand{\levi}[1]{\chunk{Levi}{\textbf{\textcolor{red}{\textsl{#1}}}}}
-\newcommand{\claudio}[1]{\chunk{Manuel}{\textbf{\textcolor{blue}{\textsl{#1}}}}}
+\newcommand{\cgg}[1]{\chunk{Manuel}{\textbf{\textcolor{blue}{\textsl{#1}}}}}
 
 \begin{document}
 \title{Building the SyVOLT Tool}
 %\title{Full Verification of Model Transformation Contracts for Declarative ATL}
-\author{Levi L\'{u}cio, Bentley James Oakes, Claudio Gomes, Hans Vangheluwe}
+\author{Levi L\'{u}cio, Bentley James Oakes, Cl\'audio Gomes, Gehan Selim,
+Juergen Dingel, James R. Cordy and Hans Vangheluwe}
 
 \author{\IEEEauthorblockN{Levi L\'{u}cio\IEEEauthorrefmark{1},
-			Bentley James Oakes\IEEEauthorrefmark{1},
-			Claudio Gomes\IEEEauthorrefmark{2} and
-			Hans Vangheluwe\IEEEauthorrefmark{2}}
+			Bentley James Oakes\IEEEauthorrefmark{1}, 
+			Cl\'audio Gomes\IEEEauthorrefmark{2},
+			Gehan Selim\IEEEauthorrefmark{3},
+			Juergen Dingel\IEEEauthorrefmark{3},
+			James R. Cordy\IEEEauthorrefmark{3},\\ and
+			Hans Vangheluwe$^{\dagger,*}$}
 		\IEEEauthorblockA{\IEEEauthorrefmark{1}School of Computer Science,
 			McGill University,
 			Canada\\ levi@cs.mcgill.ca, bentley.oakes@mail.mcgill.ca}
 		\IEEEauthorblockA{\IEEEauthorrefmark{2}MSDL Lab,
-			U of Antwerp,
-			Antwerp\\ \{claudio\}@internet}
+			University of Antwerp,
+			Belgium\\ claudio.goncalvesgomes@ua.ac.be, hans.vangheluwe@ua.ac.be}
+		\IEEEauthorblockA{Queen's University,
+			Canada\\ \{gehan,dingel,cordy\}@cs.queensu.ca}
 	}
 
 \date{\today}
@@ -46,7 +52,6 @@
 \maketitle
 
 %\tableofcontents
-
 
 
 \begin{abstract}
@@ -64,35 +69,39 @@ A paper on SyVOLT, should explain the tool from three points of view:
 \label{sec:intro}
 \input{text/introduction}
 
-\section{Dsltrans}
+\section{Background}
 Families to persons example.
+
 \section{Prover Overview}
 Just from the user point of view, how do we build the transformation and
-verify.\\
-Methodological workflow.
-\subsection{Eclipse Plugin}
-\subsection{Expressing Properties}
-Limits of property language expressiveness.
-\subsection{Wirlwind tour of SyVOLT}
-Using counterexamples to fix the transformation.\\
-Using SyVOLT for certification.
-\section{Model-Driven Architecture}
-Assumption that we can do it in a model-driven way.\\
-Graph rewriting vs GPL.
-\subsection{Pyramify}
-\subsection{PC generation}
-\subsection{Property proof}
-\section{mbeddr Industrial Case Studies}
+verify. Methodological workflow.\\\\
+\input{text/highlights}
+
+\section{SyVOLT's Architecture}
+\input{text/arch} 
+
+\section{The mbeddr Industrial Case Study}
 The Idea here is to indroduce the features that had to be implemented for the
 approach to work/scale for each one of the cases studies, from the simplest to
 the most complex.
 \subsection{Slicing}
-\section{Discussions (scalability/insights into
-applying model driven techniques/applicability/industrial use)}
-List of observations\\
+
+\section{Discussion}
+\begin{itemize}
+\item scalability
+\item insights into applying model driven techniques
+\item applicability
+\item industrial
+\end{itemize}
+use List of observations\\
 Discussing limitations of model-driven technology here.
+\input{text/discussion} 
+
+\section{Related Work}
+\input{text/related_work}
 
 \section{Conclusions}
+\input{text/conclusion}
 
 \section*{Acknowledgements}
 acknowledgements here\ldots
