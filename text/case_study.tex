@@ -1,0 +1,88 @@
+
+%summary of this section.
+In this section, we report on the development and verification of a complex model translation that is used to compile high level embedded system models to C programs.
+We start with some background on the mbeddr language, used to prescribe software for embedded systems. Afterwards we highlight the importance that this case study has for the embedded systems that perform critical functions.
+Then we give an overview of the translation that performs the compilation of mbeddr models and we show one contract that a correct compilation must satisfy. Finally, we end the section with some discussion about the limits of the SyVolt contract language.
+
+\subsection{Mbeddr: A programming Language for Embedded Systems}
+
+% What is mbeddr and what it is used for.
+Mbeddr is a set of domain-specific extensions to the C programming language \cite{Voelter:2012:MEC:2384716.2384767}. These linguistic extensions provide well known abstractions for programming embedded systems, namely, decision tables, components and interfaces, state machines, physical units, etc\ldots
+Mbeddr has been used both academically and commercially \cite{Voelter2013,Voelter2014,mry_et_al:DR:2014:4543}.
+
+% Components
+Components are a useful abstraction because they allow the embedded system modeller to separate implementation from specification.
+Mbeddr allows the modeller to declare interfaces, each with a set of operation signatures (\emph{specification}). Components then can declare provided or required ports. Each port is associated with an interface thus, if a component provides a port, it must implement the operations declared in the interface of that port (\emph{implementation}). 
+Instances of components communicate between each other by invocating operations through their required ports. 
+These instances of components are wired together by specifying, for each required port, what provided port - and by extension the component instance that provides that port - satisfies that requirement.
+The implementation of operations can be done with pure C code, decision tables and state machines.
+
+% Decision tables
+Decision tables essentially abstract nested if statements. They are a useful abstraction because one can quickly express decision making based on a large number of variables. 
+
+% State machines
+State machines abstract switch/case statements. mbeddr also provides special syntactic constructs that allow the state machine to interact with its surrounding code, for instance, react to a invocation coming through a provided port. In mbeddr, state machines can only access local variables.
+
+% Simple example and disclaimer that the simple example is not the case study.
+To make the discussion of mbeddr concrete, we introduce a simple example but please notice that this example is not the case study. The case study is the compilation of any mbeddr model to C and not just this simple example.
+Listing~\ref{code:simple_example_mbeddr} shows the textual syntax\footnote{Textual syntax is an abuse. mbeddr is developed in JetBrains Meta Programming System (MPS) and MPS uses a projectional editor where the user interacts directly with the abstract syntax tree of the model with no parsing involved.} of the mbeddr model.\cgg{I have to introduce keywords to this listing to make it prettier.}
+
+
+\lstset{language=C, caption={Client/Server Example in mbeddr},label=code:simple_example_mbeddr} 
+\begin{lstlisting}[float]
+exported cs interface Client { 
+  void client_process() 
+} 
+
+exported cs interface Server { 
+  string server_process(string request) 
+} 
+
+exported component ClientComponent extends nothing { 
+  provides Client clientInterface 
+  requires Server clientcomp_serverInterface 
+   
+  void clientInterface_client_process() <= op clientInterface.client_process { 
+    clientcomp_serverInterface.server_process("Hello"); 
+  } runnable clientInterface_client_process 
+} component ClientComponent 
+
+exported component GoodServer extends nothing { 
+  provides Server serverInterface 
+  string serverInterface_server_process(string request) <= op serverInterface.server_process { 
+    return request; 
+  } runnable serverInterface_server_process 
+} component GoodServer 
+
+exported component BadServer extends nothing { 
+  provides Server serverInterface 
+  string serverInterface_server_process(string request) <= op serverInterface.server_process { 
+    int32 x = 0; 
+    while (x >= 0) { 
+      x = x + 1; 
+    } while 
+    return request; 
+  } runnable serverInterface_server_process 
+} component BadServer 
+
+instances instances { 
+  instance ClientComponent clientComponent 
+  instance GoodServer gserverComponent 
+  instance BadServer bserverComponent 
+  connect clientComponent.clientcomp_serverInterface to gserverComponent.serverInterface 
+  adapt clientPort -> clientComponent.clientInterface 
+}
+\end{lstlisting}
+
+This example consists of two interfaces, three components and one instance of each component:
+\begin{compactdesc}
+\item[Client and Server interfaces] define the operation signatures akin to how function prototypes are defined in C.
+\item[Client component] provides the Client interface through a port called ``clientInterface'' and requires the Server interface through a port called ``clientcomp\_serverInterface''. The implementation of the operation ``client\_process'', declared in the Client interface is just the invocation of the ``server\_process'' operation of the Server interface through the ``clientcomp\_serverInterface'' port.
+\end{compactdesc}
+
+\cgg{Continue here.}
+
+
+
+\subsection{Correct Embedded Systems}
+
