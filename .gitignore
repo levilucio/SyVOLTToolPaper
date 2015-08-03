@@ -1,8 +1,9 @@
 *.aux
 *.bbl
 *.blg
-*.pdf
 *.synctex.gz
 *.log
 *.bib.bak
 /tmp/
+
+syvolt-tool.pdf
