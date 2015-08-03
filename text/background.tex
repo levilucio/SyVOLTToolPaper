@@ -48,7 +48,7 @@ A community is composed of people and each person can either be a man or a woman
         \label{fig:families_to_persons_metamodels}
 \end{figure}
 
-% Informal description of the transformation.
+% Informal description of DSLTrans.
 The partial translation of a family model into a community model, in DSLTrans,
 is done by executing the transformation shown in Figure~\ref{fig:families_mm}.
 We show the partial transformation because it is sufficient to explain DSLTrans
@@ -79,22 +79,28 @@ $(f, m_i)$, create a Man element with a name defined by the concatenation of the
 \end{center}
 \end{figure}
 
-In summary, if we apply the DSLTrans transformation shown in  Figure~\ref{fig:families_mm} to a family model with 3 sons, we would get a community model with 3 men, each with a name that is its first name concatenated with its family name.
-
+%summary and bridge to the next section
+In summary, if we apply the DSLTrans transformation partially shown in  Figure~\ref{fig:families_mm} to a family model with a father, a mother, a son and a daughter, we expect to get a community model with 2 men and 2 women. The previous sentence represents a property about the transformation that we might wish to verify automatically.
 
 \subsection{Model Transformation Verification}
 
-\subsubsection{What is model transformation verification?}
+% What is transformation verification?
+Notice that the previous property is in the form of an implication, which must be true independently of the concrete input model given to the transformation.
+This means that to prove the property, it is not enough to prove that it holds for a single input model with a father, a mother, a son and a daughter. That would be just testing the transformation.
+Rather, we must prove that it holds for the infinitely many possible input models.
 
-\subsubsection{Transformation verification vs transformation testing}
+% Motivation for automatic verification
+For small transformations it is easy to prove that they satisfy certain
+properties but model transformations have been successfully applied in industry
+(e.g., \cite{daghsen:hal-00660252,Giese2010}) and these transformations - and
+the models involved, as evidenced in \cite{Selim2012} and in our own case study
+Section~\ref{sec:mbeddr_case_study} - can be quite large
+\footnote{Transformations with circa 50 rules and metamodels with more than 1500
+classes}.
+For these transformations, automatically proving that they are correct is of utmost importance.
 
-
-
-
-
-
-
-
+%bridge to the next section.
+By correct transformations, we mean that they are automatically proven to satisfy the properties described by the domain expert. We abstain from prescribing which properties are of interest. Instead, we focus on the verification/proving process itself.
 
 
 
