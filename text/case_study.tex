@@ -69,8 +69,7 @@ instances instances {
   instance ClientComponent clientComponent 
   instance GoodServer gserverComponent 
   instance BadServer bserverComponent 
-  connect clientComponent.clientcomp_serverInterface to gserverComponent.serverInterface 
-  adapt clientPort -> clientComponent.clientInterface 
+  connect clientComponent.clientcomp_serverInterface to gserverComponent.serverInterface
 }
 \end{lstlisting}
 
@@ -78,11 +77,57 @@ This example consists of two interfaces, three components and one instance of ea
 \begin{compactdesc}
 \item[Client and Server interfaces] define the operation signatures akin to how function prototypes are defined in C.
 \item[Client component] provides the Client interface through a port called ``clientInterface'' and requires the Server interface through a port called ``clientcomp\_serverInterface''. The implementation of the operation ``client\_process'', declared in the Client interface is just the invocation of the ``server\_process'' operation of the Server interface through the ``clientcomp\_serverInterface'' port.
+\item[GoodServer component] provides the Server interface and the implementation of the ``server\_process'' operation is just an echo.
+\item[BadServer component] provides the Server interface and the implementation of the ``server\_process'' operation is an infinite loop. The reason for this odd choice off example will become clear in the next section.
+\item[Instances] are declared for each component and the required ``clientcomp\_serverInterface'' port of the Client component instance is connected to the provided ``serverInterface'' port of the GoodServer component instance.
 \end{compactdesc}
-
-\cgg{Continue here.}
-
 
 
 \subsection{Correct Embedded Systems}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
