@@ -176,7 +176,7 @@ static inline void bserver_wire(void)
   bserver_serverI_ops.server_process = &BadServer_serverI_server_process;
 }
 static inline void client_wire(void) 
-{
+{_
   client_clientI_ops.client_process = &Client_clientI_client_process;
   client_inst.client_serverI_port = &gserver_inst;
   client_inst.client_serverI_ops = &gserver_serverI_ops;
@@ -224,6 +224,21 @@ The \verb=Client_i_t= structure has a CFunctionPointerStructMember named \verb=c
   \includegraphics[width=0.48\textwidth]{figures/CModelclassdiagram}
   \caption{Simplified C metamodel. \cgg{This picture needs to be compressed.}}
   \label{fig:CModelclassdiagram}
+\end{center}
+\end{figure}
+
+
+\subsubsection{Code Generation}
+
+Mbeddr comes with a default C code generator specified in a template language. Unfortunately, we are not able to apply our proof technique to that template language because of its expressivity. Instead, we created an DSLTrans transformation that performs the same task as the generator and in this case study we demonstrate that that transformation is correct with respect to the contract presented before about the correct wiring of the component instances.
+
+We could have specified the generator in declarative ATL~\cite{Jouault2006a}, since it is now supported by SyVolt \cite{Oakes}, but at the time we developed this case study, only DSLTrans was supported.
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=0.49\textwidth]{figures/mbeddr2C_optimized_layer1}
+  \caption{Mbeddr-to-C transformation: layer 0.}
+  \label{fig:mb2c_layer_1}
 \end{center}
 \end{figure}
 
