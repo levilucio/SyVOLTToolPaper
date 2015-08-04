@@ -38,7 +38,7 @@ exported cs interface Server {
   string server_process(string request) 
 } 
 
-exported component ClientComponent extends nothing { 
+exported component Client extends nothing { 
   provides Client clientInterface 
   requires Server clientcomp_serverInterface 
    
@@ -89,7 +89,7 @@ This example consists of two interfaces, three components and one instance of ea
 The main reason for us to choose this case study is that embedded systems need to be reliable: there are industry standards such as ISO-26262, DO-178B or IEC-61508 to help ensure reliability and there are critical embedded systems such as pacemakers \cite{mry_et_al:DR:2014:4543} that also need to be correct.
 
 % Traditional development of reliable embedded systems
-Traditionally, embedded systems are implemented in C code and reliability is ensured by a combination of testing and model checking. Testing only guarantess reliability in as far as the test cases go and because C is very expressive, C programs need to be abstracted in order to properly apply model checking techniques \cite{Ivancic2005}. 
+Traditionally, embedded systems are implemented in C code and reliability is ensured by a combination of testing and model checking. Testing only guarantees reliability in as far as the test cases go and because C is very expressive, C programs need to be abstracted in order to properly apply model checking techniques \cite{Ivancic2005}. 
 The abstraction process is error prone and time consuming as is described in \cite{Corbett2000} and \cite{Ratiu:2012:LEE:2663689.2663692}.
 
 % Mbeddr contribution to the reliable embedded systems development
@@ -110,12 +110,12 @@ In practice this correctness can be ensured by manual reviews of the code genera
 
 %how can syvolt help to ensure reliability
 SyVolt is a step towards ensuring the C code generation is correct automatically without having to perform these checks in the generated code, provided the appropriate contracts are described.
-It allows the user to express contracts that relate the generated C constructions with the elements in the mbdeddr model.
+It allows the user to express contracts that relate the generated C constructions with the elements in the mbeddr model.
 This is something that cannot be done by checking the generated C code alone as it requires the traceability information between the generated C code and the mbeddr model.
 
 %example
 For instance, in SyVolt it is possible to prove that the wiring of instances of components is always respected, i.e., when executing the C code, no instance will invoke a different operation than the one that is specified in the wiring scheme at the mbeddr level. This is an important contract as it ensures, for instance, that the Client component instance in our Client/Server example (see Listing~\ref{code:simple_example_mbeddr}) will never invoke the operation of the BadServer component instance.
-To see how non trivial this contract can be, look at the wiring function \verb=client_wire= of Listing~\ref{code:components_sample_c}.: the wiring in the C code is done by assignment the address of the required port operation to a function pointer that is part of the instance's runtime data.
+To see how non trivial this contract can be, look at the wiring function \verb=client_wire= of the generated code from the Client/Server example shown in Listing~\ref{code:components_sample_c}.: the wiring in the C code is done by assignment the address of the required port operation to a function pointer that is part of the instance's runtime data.
 For more complex examples, this becomes very difficult to inspect in the generated code.
 
 \lstset{language=C, caption={Client/Server Example in mbeddr},label=code:components_sample_c} 
@@ -190,8 +190,42 @@ static inline void gserver_wire(void)
 
 \subsection{Mbeddr to C Code Generation}
 
+%small intro to this section
+Listing~\ref{code:components_sample_c} already disclosed the generated C code for the Client/Server mbeddr model shown in Listing~\ref{code:simple_example_mbeddr}. However, we have not disclosed how, in general, is the C code generated from an mbeddr model.
+The C code is generated with a model transformation specified between two metamodels: the source metamodel is the mbeddr metamodel and the target metamodel is the C metamodel.
 
+\subsubsection{Source and Target Metamodels}
 
+We present a simplified version of the mbeddr metamodel in Figure~\ref{fig:Moduleclassdiagram}:
+\begin{compactdesc}
+	\item[ImplementationModule] represents the root container of the mbeddr model. It is composed of InstanceConfigurations, AtomicComponents and ClientServerInterfaces. There are other kinds of interfaces but they are not relevant for our purposes.
+	\item[ClientServerInterface] represents a set of Operations. An Operation represents a signature, with arguments and typing information. We omit these details to keep the discussion short. In Listing~\ref{code:simple_example_mbeddr} there are two ClientServerInterfaces - Client and Server - each with one Operation.
+	\item[AtomicComponent] represents a component. It has Ports, which can be ProvidedPorts or RequiredPorts, and Executables. Executables essentially represent an operation implementation. OperationTriggers define which port and operation the executable is implementing. In Listing~\ref{code:simple_example_mbeddr}, the GoodServer component has one provided port, named \verb=serverInterface=, and one executable named \verb=serverInterface_server_process= that is executed whenever the operation \verb=server_process= is invoked through the port \verb=serverInterface=. We have omitted the body of the Executable.
+	\item[InstanceConfiguration] represent the runtime configuration of the component instances. It is comprised of ComponentIntance declarations and AssemblyConnectors. AssemblyConnectors allow the modeller to establish the connections between required and provided ports, and the instances.  In Listing~\ref{code:simple_example_mbeddr}, the InstanceConfiguration has three instances and one AssemblyConnector that connects the RequiredPort \verb=clientcomp_serverInterface= of the \verb=clientComponent= instance to the ProvidedPort \verb=serverInterface= of the \verb=gserverComponent= instance.
+This means that, the required port invocation \verb=server_process("Hello")= in the \verb=Client= will be handled by the \verb=GoodServer=.
+\end{compactdesc}
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=0.48\textwidth]{figures/Moduleclassdiagram}
+  \caption{Simplified mbeddr metamodel. \cgg{This picture needs to be compressed.}}
+  \label{fig:Moduleclassdiagram}
+\end{center}
+\end{figure}
+
+The simplified version of the C metamodel is shown in Figure~\ref{fig:CModelclassdiagram}. 
+We have included only the concepts that are relevant for the contract we prove in this case study.
+A C model has multiple compilation units, which we call ImplementationModules. An ImplementationModule has TypeDefs, StructDeclarations, FunctionPrototypes, Functions and GlobalVariableDeclarations.
+In Listing~\ref{code:components_sample_c}, the ImplementationModule has five StructDeclarations, six GlobalVariableDeclarations and seven Functions.
+The \verb=Client_i_t= structure has a CFunctionPointerStructMember named \verb=client_process=. The remaining concepts should be familiar to the reader\cgg{Should I give more details about the C or can I assume that they know C?}.
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=0.48\textwidth]{figures/CModelclassdiagram}
+  \caption{Simplified C metamodel. \cgg{This picture needs to be compressed.}}
+  \label{fig:CModelclassdiagram}
+\end{center}
+\end{figure}
 
 
 
