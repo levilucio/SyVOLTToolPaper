@@ -230,36 +230,108 @@ The \verb=Client_i_t= structure has a CFunctionPointerStructMember named \verb=c
 
 \subsubsection{Code Generation}
 
+% Why did we not use the default C code generator and disclaimer
 Mbeddr comes with a default C code generator specified in a template language. Unfortunately, we are not able to apply our proof technique to that template language because of its expressivity. Instead, we created an DSLTrans transformation that performs the same task as the generator and in this case study we demonstrate that that transformation is correct with respect to the contract presented before about the correct wiring of the component instances.
+We reinforce that the way the C code is generated is exactly the way the default C code generator outputs. We did not decide on how the C code is generated.
 
+% Why did we not use ATL instead of DSLTrans.
 We could have specified the generator in declarative ATL~\cite{Jouault2006a}, since it is now supported by SyVolt \cite{Oakes}, but at the time we developed this case study, only DSLTrans was supported.
+
+% Informal description of transformation
+By comparing the mbeddr model example in Listing~\ref{code:components_sample_c} with the corresponding generated C code in Listing~\ref{code:simple_example_mbeddr}, we can already hint some informal mappings:
+\begin{compactitem}
+\item A struct declaration, ending in \verb=_i_t= is created for each ClientServerInterface. This structure holds a pointer for each operation declared in the interface.
+\item A struct, ending in \verb=_c_t= is created for each AtomicComponent. This structure has two members for each required port in the component: one to keep the instance of the components that provides that port and the other to hold the reference to the operations that are provided in that port.
+\item For each ProvidedPort of each ComponentInstance, there is a global variable ending in \verb=_ops= that will hold references to the implementations of the operations provided in that port.
+\item For each operation implemented by a component through a provided port, there is a global function with the code that corresponds to that implementation.
+\item There is an \verb=init= operation that call all the wiring functions.
+\item And there is a \verb=_wire= function for each component instance. The wiring functions are responsible for two things: initialize the \verb=_ops= global variable with the pointers for the provided operations' implementations; and, in the case of an instance that has a required port that is connected to another instance's provided port, assign the addresses of the target instance's instance and operations to the source instance data.
+\end{compactitem}
+
+% Formal description of first layer and justify the trimming of the transformation
+The DSLTrans transformation that generates the C model from any mbeddr model has  7 layers and 49 rules. Due to its size, we will focus our discussion in a trimmed version of it, relevant to the contract we are going to prove.
+Figure~\ref{fig:mb2c_layer_0} shows the first layer (Layer 0) of the transformation. Rule 1 is creating a StructDeclaration for each ClientServerInterface it finds in the mbeddr model. 
+The name of this newly created StructDeclaration is the name of the ClientServerInterface followed by \verb=_i_t=.
+Furthermore, the newly create StructDeclaration is traced back to the ClientServerInterface that generated it by a trace named ClientServerStructIData. 
+Rule 11 is creating a FunctionPrototype for each Operation declared by the Interface of each ProvidedPort. The name of this Function, although omitted to save space, is a concatenation of the name of the AtomicComponent, name of the ProvidedPort and the name of the Operation. because this FunctionPrototype is associated with the ImplementationModule in later layers (hence, it is in the global scope), this naming ensures no collisions occur.
+The other rules in this layer are very similar so we refrain ourselves from explaining them.
 
 \begin{figure}
 \begin{center}
-  \includegraphics[width=0.49\textwidth]{figures/mbeddr2C_optimized_layer1}
+  \includegraphics[width=0.48\textwidth]{figures/mbeddr2C_optimized_layer_0}
   \caption{Mbeddr-to-C transformation: layer 0.}
+  \label{fig:mb2c_layer_0}
+\end{center}
+\end{figure}
+
+% layer 1
+In the second layer (Layer 1) of the transformation, shown in Figure~\ref{fig:mb2c_layer_1}, the previously created StructDeclaration elements are associated with the ImplementationModule that was created in Layer 0 (Rule 0).
+Also, in Rule 12 of this layer, the FunctionPrototype created in the Rule 11 of the previous layer is associated with the ImplementationModule.
+The other rules are similar.
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=0.48\textwidth]{figures/mbeddr2C_optimized_layer_1}
+  \caption{Mbeddr-to-C transformation: layer 1.}
   \label{fig:mb2c_layer_1}
 \end{center}
 \end{figure}
 
+% layer 3
+In Layer 3, Figure~\ref{fig:mb2c_layer_3}, Rule 4 creates a GlobalVariableDeclaration (ended in \verb=_inst=) for each ComponentInstance.
+Rule 3 creates a GlobalVariableDeclaration for each ProvidedPort of each ComponentInstance, ended in \verb=_ops=.
+These variables will hold the the instance data of the component instance and the address of the provided ports' operations of the component instance.
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=0.48\textwidth]{figures/mbeddr2C_optimized_layer_3}
+  \caption{Mbeddr-to-C transformation: layer 3.}
+  \label{fig:mb2c_layer_3}
+\end{center}
+\end{figure}
+
+% Layer 4
+The next layer, Layer 4, Figure~\ref{fig:mb2c_layer_4}, creates the \verb=_wire= (Rule 0)
+and \verb=init= (Rule 1) Functions from the ComponentInstances and the InstanceConfiguration, respectively. These functions are created with an empty body but they will later implement the wiring of their corresponding component instances. The \verb=init= function will just call all the \verb=_wire= functions.
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=0.48\textwidth]{figures/mbeddr2C_optimized_layer_4}
+  \caption{Mbeddr-to-C transformation: layer 4.}
+  \label{fig:mb2c_layer_4}
+\end{center}
+\end{figure}
+
+% Layer 5
+Finally, in the last layer, Layer 5, Figure~\ref{fig:mb2c_layer_5},
+the bodies of the \verb=init= and \verb=_wire= Functions are filled in.
+Rule 0 adds an assignment to the \verb=_wire= Function body that assigns the address of the function prototype created in Rule 11 of Layer 0, to the global variable ended in \verb=_ops=, created in Layer 3, Rule 3.
+This assignment is not connecting a provided port with a required port: it is just saving the concrete function implementation in the \verb=_ops= variable.
+The connection is made in Rule 1 of this layer. The match pattern is complex but it is essentially capturing all the relevant entities that surround an AssemblyConnector: the source and target component instances and their provided/required ports. When a match for this rule is found, two assignments are added to the \verb=_wire= function of the source component instance:
+one to assign the address of the global variable that holds the instance data of the target component instance; and one to assign the address of the variable that holds the operations of the provided port to a member of the structure that folds the required port operations of the source component instance.
+Rule 2 is just adding to the body of the \verb=init=, a function call to each of the \verb=_wire= functions.
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=0.48\textwidth]{figures/mbeddr2C_optimized_layer_5}
+  \caption{Mbeddr-to-C transformation: layer 5.}
+  \label{fig:mb2c_layer_5}
+\end{center}
+\end{figure}
 
 
+\subsection{Correct Code Generation}
 
+% pre-requisites for correctness.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+In order for the transformation we just described to be correct, the wiring of instances must be correct. The pre-requisites for this are:
+\begin{compactenum}
+\item The pointers to the provided port operations, assigned to the instance variable that requires those operations do really point to the corresponding operations.
+\item The correct pointers are assigned to the correct instance variable.
+\item Besides in the wiring function, that is called by the initialization function, the instance variables' member that contains the provided port operation reference is not assigned anywhere else.
+\item The same thing as the previous for the pointers.
+\end{compactenum}
+\cgg{The above discussion is incomplete. I need to discuss this with Levi and Bentley and I need the SyVolt property.}
 
 
 
