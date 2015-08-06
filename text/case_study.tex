@@ -93,24 +93,23 @@ Traditionally, embedded systems are implemented in C code and reliability is ens
 The abstraction process is error prone and time consuming as is described in \cite{Corbett2000} and \cite{Ratiu:2012:LEE:2663689.2663692}.
 
 % Mbeddr contribution to the reliable embedded systems development
-Mbeddr represents an evolution of traditional embedded system development because it starts with abstractions that can be proven to be correct and then generates C code. Model checking techniques can be applied to Mbeddr models because they contain higher level information (e.g., a state machines or decision tables) whereas With plain C code, these abstractions need to be inferred from the C.
+Mbeddr represents an evolution of traditional embedded system development because it starts with abstractions that can be proven to be correct and then generates C code. Model checking techniques can be applied to Mbeddr models because they contain higher level information (e.g., a state machines or decision tables) whereas with plain C code, these abstractions need to be inferred from the C.
 
 % how does mbeddr help ensure correct embedded systems
 Mbeddr is integrated with the NuSMV~\cite{Cimatti2002} model checker to perform model checking of the state machines and with the Yices~\cite{Dutertre:cav2014} Satisfiability Modulo Theories (SMT) solver to check the consistency and completeness of the decision tables.
 
 % properties vs contracts
-It is important to distinguish two types of properties: properties that ensure that a given mbeddr model needs to satisfy; and properties that all mbeddr models need to satisfy. we will call the later type as contracts.
-For instance, a property of the former type for the mbeddr model of the pacemaker system is that it never stops. A contract is for mbeddr models that have decision tables is that these must be consistent and complete \cite{Ratiu:2012:LEE:2663689.2663692}. A contract for mbeddr models that have state machines is that these are free of unreachable states and dead transitions.
-Properties can be seen as contracts in the form of an implication ``if the model has a certain form, then\ldots'' so we will be focusing in contracts.
+It is important to distinguish two types of properties: properties that a given mbeddr model needs to satisfy; and properties that all mbeddr models need to satisfy.
+For instance, a property of the former type for the mbeddr model of the pacemaker system is that it never stops. A property of the later type is that decision tables, if they are used, must be consistent and complete \cite{Ratiu:2012:LEE:2663689.2663692}.
 
 %the problems with mbeddr level of abstraction
-As described in \cite{Ratiu:2012:LEE:2663689.2663692}, contracts checked at the mbeddr level can only be sound if the C code that is generated satisfies the same contracts as the mbeddr models. 
-This is precisely the definition of correctness of the C code generation. 
-In practice this correctness can be ensured by manual reviews of the code generation and automated testing.
+As described in \cite{Ratiu:2012:LEE:2663689.2663692}, properties checked at the mbeddr level can only be sound if the C code that is generated satisfies the same properties as the mbeddr models.
+The correctness of the C code generation is thus important to achieve soundness.
+In practice this correctness is ensured by manual reviews of the code generation and automated testing.
 
 %how can syvolt help to ensure reliability
-SyVolt is a step towards ensuring the C code generation is correct automatically without having to perform these checks in the generated code, provided the appropriate contracts are described.
-It allows the user to express contracts that relate the generated C constructions with the elements in the mbeddr model.
+SyVolt is a step towards ensuring the C code generation is correct automatically, provided the appropriate correctness properties (of the C code generation) are described. We will call contracts to these properties of the C code generation process.
+SyVolt allows the user to express contracts that relate the generated C constructions with the elements in the mbeddr model.
 This is something that cannot be done by checking the generated C code alone as it requires the traceability information between the generated C code and the mbeddr model.
 
 %example
