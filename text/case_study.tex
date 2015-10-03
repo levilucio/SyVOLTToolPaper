@@ -114,7 +114,7 @@ This is something that cannot be done by checking the generated C code alone as 
 
 %example
 For instance, in SyVolt it is possible to prove that the wiring of instances of components is always respected, i.e., when executing the C code, no instance will invoke a different operation than the one that is specified in the wiring scheme at the mbeddr level. This is an important contract as it ensures, for instance, that the Client component instance in our Client/Server example (see Listing~\ref{code:simple_example_mbeddr}) will never invoke the operation of the BadServer component instance.
-To see how non trivial this contract can be, look at the wiring function \verb=client_wire= of the generated code from the Client/Server example shown in Listing~\ref{code:components_sample_c}.: the wiring in the C code is done by assignment the address of the required port operation to a function pointer that is part of the instance's runtime data.
+To see how non trivial this contract can be, look at the wiring function \verb=client_wire= of the generated code from the Client/Server example shown in Listing~\ref{code:components_sample_c}.: the wiring in the C code is done by assignment the address of the required port operation to a function pointer that is part of the instance's runtime data.\cgg{I must stress this complexity by explaining better how the wriring is done and how the function is then called. Relying on the reader to understand this complexity from the example is non-sense.}
 For more complex examples, this becomes very difficult to inspect in the generated code.
 
 \lstset{language=C, caption={Client/Server Example in mbeddr},label=code:components_sample_c} 
