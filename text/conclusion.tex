@@ -1,1 +1,15 @@
 add conclusion here\ldots
+
+Here are some ideas that should be incorpared somewhere in this journal:
+\begin{itemize}
+  \item Something that we should make clear in the case study section of the mbeddr: there is no way for the user of mbeddr to modify the variables that are involved in the contract. The consequence of this is that we do not need to look into the body of the executable functions created by the user of mbeddr. In particular, we do not need complicated dataflow analysis to ensure this.
+  \item Can we prove that there is no other assignment being made that changes the variables involved in the hand side of the contract? 
+	This is a difficult question but based on the ideas proposed by Markus, it might be possible to prove them with two contracts and an implication between them. Basically, we state the contract in other perspective: if there is any assignment changing the left hand side of the variables, then the right hand side of that very same assignment should be comprised of the correct expression. This is where the implication comes into play. We make a contract proving that any assignment must be made and the  second contract proves that that same assignment has the correct right hand side.
+	\item How do we pick the most relevant contracts to be proven?
+	A rule of thumb would be to look at those contracts that, if not satisfy, will result in bugs that are very hard to catch at runtime, i.e., they do not cause a crash but instead they cause mal functioning.
+	This is an important rule of thumb because, as Markus said, embedded systems usually must ensure that, if they do not crash in the first seconds of operation, when a self-check is being made, they will not fails afterwards… never.
+	\item I've noticed that there is some doubts about what slicing is. I guess a good idea is to include a concrete example of a set of rules that are "sliced out" by this optimization, for a specific contract. This would be added to the journal paper.
+	\item One argument to defend the need for a super computer to perform this optimization is that the proof of contracts is not something to be made in your personal computer. It is supposed to be something that you do only once.
+\end{itemize}
+
+
