@@ -1,5 +1,5 @@
 #TeXlipse project settings
-#Mon Oct 05 14:33:34 CEST 2015
+#Thu Jan 07 15:47:59 CET 2016
 markTmpDer=true
 builderNum=2
 outputDir=
@@ -9,6 +9,6 @@ outputFormat=pdf
 tempDir=tmp
 mainTexFile=syvolt-tool.tex
 outputFile=syvolt-tool.pdf
-langSpell=
+langSpell=en
 markDer=true
-srcDir=
+srcDir=text
