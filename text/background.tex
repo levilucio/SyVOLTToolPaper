@@ -1,93 +1,232 @@
-
+In this section, we introduce the model transformation language DSLTrans used in this paper.
 
 \subsection{The DSLTrans Transformation Language}
 
-% DSLTrans: why it was used to prove properties.
-DSLTrans~\cite{Barroca2011} is an MTL used to specify model translations.
-Its main distinctive feature is that the model translations that are described
-in DSLTrans are guaranteed to always\markus{Where has this been shown?
-Reference?} terminate\footnote{This result assumes that finite models are
-used.}. This feature comes at a cost: DSLTrans is not Turing complete, i.e., no
-unbounded recursion, non-determinist\markus{Is this sentence complete?} or
-element deletion can be specified.
+
+DSLTrans is a visual graph-based and rule-based model
+transformation engine that has two important properties enforced by construction: all its computations
+are both \emph{terminating} and \emph{confluent}~\cite{Barroca2011}.
+These properties stem from the fact that DSLTrans does not allow
+unbounded loops during execution, making it a Turing-incomplete
+computing language~\cite{Barroca2011}\footnote{This result assumes that finite models are
+used.}. Besides their obvious importance in
+practice, \emph{termination} and \emph{confluence} were instrumental in the
+implementation of our verification technique for pre-/post-condition contracts.
+
+Note that to provide this verification ability, it is not possible to delete elements in DSLTrans.
 Despite the apparent lack of expressivity, our experience has showed that it is
-possible to specify a wide range of transformations using DSLTrans. Furthermore,
-it makes DSLTrans transformations ideal to prove properties about since the set
-of possible behaviors is finite.
+possible to specify a wide range of transformations using DSLTrans, including a previous industrial example CITE SELIM.
 
-%Why use the families to persons example.
-To present the syntax and semantics of DSLTrans, we will be using the Families-to-Persons transformation from the ATL transformation zoo \footnote{\url{http://www.eclipse.org/atl/atlTransformations}}.
-Because this transformation can be easily understood, it allows us to focus on the essential concepts of DSLTrans.
+Model transformations are expressed in DSLTrans as sets of graph rewriting
+rules, having an upper part (named \emph{MatchModel}), a lower part (\emph{ApplyModel}) and,
+optionally, negative application conditions. The main construction
+used in the scheduling of model transformation rules in DSLTrans is a
+\emph{layer}. Each model transformation rule in a layer cannot match over the output of any other rule in the same layer. As well, rules cannot modify the input graph during the rewriting phase (termed \emph{out-place} execution). Layers are organized sequentially and
+the output model that results from executing a given layer is passed as input to
+the next layer in the sequence.
 
-%Metamodels of families to persons
-Figure~\ref{fig:families_to_persons_metamodels} shows the metamodel of the Family language on the left, and the Community language on the right.
-These two languages represent different perspectives of groups of people. A family has a father, mother, daughters and sons.
-A community is composed of people and each person can either be a man or a woman.
 
-\begin{figure}
-        \centering
-        \begin{subfigure}{0.5\linewidth}
-                \centering
-                \includegraphics[width=\linewidth]{figures/Familiesclassdiagram}
-                \caption{Families metamodel.}
-                \label{fig:families_mm}
-        \end{subfigure}%
-        \begin{subfigure}{0.5\linewidth}
-                \centering
-                \includegraphics[width=\linewidth]{figures/communitydiagram}
-                \caption{Community metamodel.}
-                \label{fig:community_mm}
-        \end{subfigure}%
-        \caption{ }
-        \label{fig:families_to_persons_metamodels}
-\end{figure}
+A DSLTrans rule can match over the elements of the input model of the
+transformation and also over elements that have been generated so far in the
+output model. Matching over elements of the output model of a
+transformation is achieved using a DSLTrans construct called \emph{backward
+links}. Backward links allow matching over traces between elements in the input and
+the output models of the transformation. These traces are explicitly built by
+the DSLTrans transformation engine during rule execution.
 
-% Informal description of DSLTrans.
-The partial translation of a family model into a community model, in DSLTrans,
-is done by executing the transformation shown in
-Figure~\ref{fig:families_mm}\markus{Figure is too small; font unreadable.}.
-We show the partial transformation because it is sufficient to explain DSLTrans
-semantics. DSLTrans transformations are organized in partial\markus{ly?} ordered
+ \begin{figure}[t]
+   \begin{center}
+     \includegraphics[width=0.40\textwidth]{figures/FamToPersons/UWRule}
+     \caption{An example of a DSLTrans rule}
+     \label{fig:DSLTrans_rule}
+   \end{center}
+   \vspace{-0.25in}
+ \end{figure}
+
+For example, we depict in Figure~\ref{fig:DSLTrans_rule} a
+rule in the DSLTrans language.
+When a rule is executed, the graph in the \emph{MatchModel} of the rule is searched for in the transformation's input model, together with the classes in the \emph{ApplyModel} of the rule that are connected to \emph{backward
+links}. An example of a \emph{backward link} can be observed in
+Figure~\ref{fig:DSLTrans_rule} as a dotted line connecting the \emph{Country} and the
+\emph{Community} match classes. During the rewrite part of rule application,
+the instances of classes in the \emph{ApplyModel} of the rule that are not connected to
+backward links, together with their adjacent relations, are created in the
+output model.
+
+For example, the \emph{UnionWomanRule} rule in Figure~\ref{fig:DSLTrans_rule} will match over a \emph{Country} element connected to a \emph{Family} element connected to a \emph{Parent} element. If these elements are found in the input model along with the corresponding \emph{Community} and \emph{Woman} elements in the output model, then a \emph{persons} relation will be created between those output elements.
+
+Although not present in this rule,
+copying object attribute values from the \emph{MatchModel} to the \emph{ApplyModel} of the rules is
+also part of the DSLTrans language, as illustrated in Section~\ref{sec:DSLTransRepresentation}.
+
+
+In addition to the constructs presented in the example in
+Figure~\ref{fig:DSLTrans_rule}, DSLTrans has several others:
+\emph{existential matching} which allows selecting only one result when a match class of a rule
+matches an input model, \emph{indirect links} for transitive matching
+over containment relations in the input model, and \emph{negative application
+conditions} that allow the transformation designer to specify conditions under
+which a rule should not match. These constructs are not currently used in
+our verification approach, and the interested reader is referred to~\cite{Barroca2011} for further information.
+
+DSLTrans transformations are organized in partially ordered
 layers.
 Each layer is executed after its previous layer. Each layer has a set of rules.
 The execution of a layer means the execution of the rules that comprise that
 layer.
 The rules inside the same layer are executed independently of one another, i.e.,
 there is no order of execution of rules and they cannot affect the execution
-(e.g., enable or disable) of one another. Each rule has a \emph{match} pattern and an \emph{apply} pattern.
-In Figure~\ref{fig:families_mm}, besides the input model description on the top,
-there are two layers. The input model description contains the location of the
-input model to be translated, which in this example is a family model. The first layer has two rules and the second layer
-has one rule:
-\begin{compactdesc}
-	\item[FamilyRule] Find all the instances of Family and, for each one, create a Community element.
-	\item[SonRule] Let $S = \left\{ (f, m_1) , \ldots , (f, m_n) \right\}$ be all instances, in the input model, of Family that are connected to instances of Member by the ``son'' association. This rule states that for each of those connected elements
-$(f, m_i)$, create a Man element with a name defined by the concatenation of the name attribute of $m_i$ with the name attribute of $f$. Basically, it creates a man for each family member that is a son.
-	\item[UnionManRule] \markus{In the Fig it is called UnionSonRUle} Let $S =
-	\left\{ (f, m_1) , \ldots , (f, m_n) \right\}$ be all instances of Family that are connected to instances of Member by the ``son'' association.
-	Now, let $R$ be the set formed by iterating each element $(f, m_i)$, finding
-	the instance of Man ${man}_i$ that was created previously in SonRule and
-	finding the instance $c$ of Community that was created in the FamilyRule. This
-	rule iterates each element $(f, c, m_i, {man}_i)$ of the $R$ set and creates a
-	``has'' association between $c$ and ${man}_i$. The trace\markus{Where do they
-	come from?} links are of paramount importance to connect the instances created
-	in rules of the \emph{previous} layer.
-\end{compactdesc}
+(e.g., enable or disable) of one another. 
 
-\begin{figure}
-\begin{center}
-  \includegraphics[width=0.35\textwidth]{figures/families_to_persons_hot2}
-  \caption{DSLTrans transformation of Families to Communities (partial).}
-  \label{fig:families_mm}
-\end{center}
+
+
+\subsection{Families-To-Persons Example}
+
+%Why use the families to persons example.
+To present the syntax and semantics of DSLTrans, we will be using the \FTP from the ATL transformation zoo \footnote{\url{http://www.eclipse.org/atl/atlTransformations}}.
+Because this transformation can be easily understood, it allows us to focus on the essential concepts of DSLTrans.
+
+
+As our introductory example to the syntax and semantics of DSLTrans, we present the \FTP transformation previously described in \cite{Oakes2016}. The original \FTP transformation can be
+found in the ATL zoo~\cite{atlZoo}, and has also been discussed in a number of related works on verification and testing~\cite{Gogolla2011}.
+
+We chose this \FTP transformation as our introductory example as it transforms domains whose concepts are easily understandable by anyone (cf. Section~\ref{sec:trans_domain}).
+
+\subsection{Transformation Domains}\label{sec:trans_domain}
+
+\begin{figure}[bt]
+\centering
+\subfigure[\emph{Families\_Extended} metamodel]{
+\includegraphics[width=0.97\columnwidth]{figures/FamToPersons/Families_Extended.pdf}
+\label{fig:fams}
+}
+\subfigure[\emph{Persons\_Extended} metamodel]{
+\includegraphics[width=0.97\columnwidth]{figures/FamToPersons/Persons_Extended.pdf}
+\label{fig:pers}
+}
+\caption{Metamodels of the \emph{Families-to-Persons\_Extended} transformation}\label{fig:metamodels}
 \end{figure}
 
-% summary and bridge to the next section
-In summary, if we apply the DSLTrans transformation partially shown in 
-Figure~\ref{fig:families_mm} to a family model with a father, a mother, a son
-and a daughter, we expect to get a community model with 2 men and 2 women. The
-previous sentence represents a property about the transformation that we might
-wish to verify automatically\markus{Really? Would a verification actually talk
-about 2 men and 2 women? Wouldn't it be more general?}.
+The input and output metamodels of this transformation are shown in Figure~\ref{fig:metamodels}. Please note that abstract classes are depicted in grey color and with italic names, and inheritance relationships are depicted in grey.
+
+The input metamodel, the \emph{Families\_Extended} metamodel, has the \emph{Country} class as a root element.
+A \emph{Country} is made up of \emph{companies}, \emph{families} and \emph{cities}.
+A \emph{Family} has a \emph{lastName}, is \emph{registeredIn} a \emph{Neighborhood} and can have any number of \emph{mothers} and \emph{fathers}, who are \emph{Parent}s and may, in turn, work in (\emph{worksIn}) a \emph{Company}.
+It can also contain any number of \emph{sons} and \emph{daughters}, who are \emph{Child}ren, and every child \emph{goesTo} a \emph{School}.
+Both parents and children are \emph{Member}s that have a \emph{firstName}, belong to a \emph{family} and each of them \emph{livesIn} a \emph{City}.
+
+A \emph{City} may contain \emph{companies}, and a \emph{Company}, in turn, can be present in (relationship \emph{isIn}) several distinct cities.
+A \emph{City} is composed of \emph{neighborhoods}, and these can have \emph{schools}, where several \emph{students} are registered.
+Every \emph{School} has \emph{Service}s, and these may be \emph{special}, for students with special needs, or simply offer \emph{ordinary} services.
+Finally, countries, cities, companies, neighborhoods and schools have a \emph{name} attribute, which is inherited from the abstract \emph{NamedElement} class.
+
+The output metamodel, \emph{Persons\_Extended}, is shown in Figure~\ref{fig:pers}.
+The root class is \emph{Community}, which is made up of \emph{persons}, \emph{townHalls} and \emph{associations}.
+A \emph{Person} has a \emph{fullName} and can either be a \emph{Man} or a \emph{Woman}.
+An \emph{Association} has a \emph{Committee} that makes decisions.
+Every \emph{TownHall} has a roster of \emph{workers} (all the persons that are employed), hosts a \emph{Committee} to make decisions, and also governs several \emph{districts}.
+A \emph{District} may contain several \emph{facilities}, either of type \emph{SpecialFacility} for those with special needs, or \emph{OrdinaryFacility}.
+Each \emph{Facility} may have registered several persons as \emph{members}.
+Finally, associations, town halls, committees, districts and facilities have a \emph{name} attribute.
+
+
+\subsection{DSLTrans Representation}\label{sec:DSLTransRepresentation}
+
+\begin{figure*}
+  \begin{center}
+  \includegraphics[width=0.94\textwidth]{figures/FamToPersons/DSLTrans_Rules_javi}
+  \caption{DSLTrans version of the \emph{Families-to-Persons\_Extended} transformation}
+  \label{fig:DSLTrans_rules}
+  \end{center}
+\end{figure*}
+
+
+Figure~\ref{fig:DSLTrans_rules} displays the Families-To-Persons DSLTrans transformation . Let us mention here that we have removed five rules from the figure to improve visual clarity.
+There is a vertical dotted blue line for each of these rules, located where the rules have been removed. The missed rules are similar to those that surround them, and can therefore be safely ignored in our explanation.
+
+
+\bentley{Should describe the transformation here. Also point to Oakes2016 to say that this transformation was automatically generated from ATL}
+
+%As explained in Section~\ref{sec:dsltrans}, each DSLTrans rule has a \emph{MatchModel} and an \emph{ApplyModel}.
+%As we can see, each of them has a left-hand side (LHS) and a right-hand side (RHS)\levi{not sure about the LHS/RHS reference here\ldots}.
+%There are elements of a specific type and associations among them displayed in
+% both the upper part (named \emph{MatchedModel} in DSLTrans) and lower part (called \emph{ApplyModel}) of the rules.
+%In each side, elements of a specific type and relationships among them are displayed.
+%Elements can also have attributes.
+%Rule \emph{Households2Community} corresponds to rule R1 in
+%Listing~\ref{lst:Families2Persons}, \emph{Father2Man} corresponds to rule R2 and \emph{UnionFather}
+%to binding B11.
+
+%They appear in the \emph{ApplyModel} when they have to be initialized, and
+%in the \emph{MatchedModel} when they are used to initialize attributes in the \emph{ApplyModel}.
+%For instance, attributes \emph{fullName} and \emph{lastName} of \emph{Member} and \emph{Family} in rule \emph{Father2Man} are used
+%to initialize attribute \emph{fullName} of \emph{Man}.
+%%
+%%Other than these attributes, there are others in the RHS which appear in an element
+%%whenever such element is going to be used in backward links, and they also appear when they are being used in such links. These attributes are always referred to with the name \emph{ApplyAttribute}.
+%%For instance, we can see in rule \emph{Households2Community}, which is created for R1 in Listing~\ref{lst:Families2Persons}, that a \emph{Community} is created for a \emph{Households}.
+%%Besides, since these two elements are going to be used later in a backward link, the \emph{ApplyAttribute} attribute is set in \emph{Community}. Note that the \emph{ApplyAttribute} attribute of an element must be created when the element is created, and the rule where it is created must be in the sequence of rules before the rule that uses the element in a backward link.
+%
+%Rule \emph{Households2Community} corresponds to R1 in
+%Listing~\ref{lst:Families2Persons}, although the reference \emph{has} is not
+%initialized in this rule.
+%
+%Rule \emph{Father2Man} corresponds to R2. We can see how the two elements in the
+%\emph{from} part of the ATL rule appear in the \emph{MatchedModel} of the DSLTrans rule, as well
+%as the filter used in ATL, which is represented as an association. The
+%element \emph{Man} appears in the \emph{ApplyModel}, and its \emph{fullName} attribute is
+%updated with the concatenation of the \emph{firstName} and \emph{lastName}
+%attributes. A similar rule, not shown here, creates elements of type
+%\emph{Woman}, which corresponds to R3 in Listing~\ref{lst:Families2Persons}.
+%
+%The last rule is used to set the \emph{has} relation between a \emph{Community}
+%and a \emph{Man}. Here, backward links are used. The first one is to indicate
+%that the \emph{Community} element has been created from a \emph{Households}
+%element (which was done in rule \emph{Households2Community}). The other two
+%backward links state that the \emph{Man} is created from a \emph{Family} and a
+%\emph{Member} that are linked with the relation \emph{father} (such as in rule
+%\emph{Father2Man}). This rule corresponds to binding B11 in
+%Listing~\ref{lst:Families2Persons}. There is a similar rule, not shown in the
+%figure, for initializing the \emph{has} association between \emph{Community} and
+%\emph{Woman}, what corresponds to B12.
+
+
+
+Note that attribute copies are represented with arrows from the \emph{ApplyModel} of the rule to the \emph{MatchModel}, such as in rule \emph{Neighborhood2District}, where the created \emph{District} gets the same name as the matched \emph{Neighborhood}.
+The string of an attribute of a created element can also be initialized with the concatenation of several strings.
+For instance, in rule \emph{Father2Man}, the full name of the created \emph{Man} comes from the concatenation of the first name of the matched \emph{Parent} and the last name of his/her \emph{Family}.
+Or it can be assigned the string of an attribute of an element in the \emph{MatchModel} concatenated with a given string, such as in rule \emph{City2TownHall}.
+
+
+%\emph{Father2Man} in Figure~\ref{fig:DSLTrans_transformation} performs an attribute
+%copy from the match to the apply part of the rule, graphically represented with arrows from the \emph{ApplyModel} to the \emph{MatchModel}. More precisely, it
+%fills in the \emph{fullName} attribute of the generated \emph{Man} instance by
+%concatenating the \emph{firstName} and \emph{lastName} attribute values found
+%respectively in the \emph{member} and \emph{family} instances identified by the
+%match part of the rule. This operation replicates the concatenation of the
+%\emph{firstName} and the \emph{lastName} occurring in the rule component marked
+%\emph{B2} in Listing~\ref{lst:Families2Persons}.
+
+%The first three rules in the DSLTrans transformation replicate the R1, R2, and R3
+% portions of the ATL transformation. Then, the last four rules in
+% Figure~\ref{fig:DSLTrans_transformation} connect those elements and set the values, replicating B11, B12, B2, and B3 in Listing~\ref{lst:Families2Persons}.
+%
+% This transformation has been built automatically from its ATL
+%counterpart using a higher-order transformation, which will be presented in Section~\ref{sec:mapping}. For now, we will briefly the differences and
+%similarities between the two transformations:
+%
+%\begin{itemize}
+%  \item The DSLTrans F2P transformation is completely graphical, while the ATL
+%  F2P transformation is fully textual.
+%  \item The DSLTrans F2P is composed of layers that are organized sequentially.
+%  A layer in DSLTrans is a box (e.g. the \emph{Root} rule in
+%  Figure~\ref{fig:DSLTrans_transformation}) that can contain one or more rules.
+%  In the transformation in Figure~\ref{fig:DSLTrans_transformation}) each layer
+%  contains only one rule, as that layout is automatically produced by the higher
+%  order transformation.
+%  \item The layers belonging to the transformation in
+%  Figure~\ref{fig:DSLTrans_transformation} execute one after the other, passing
+%  the result of one layer to the next one.
+%\end{itemize}
 
 
