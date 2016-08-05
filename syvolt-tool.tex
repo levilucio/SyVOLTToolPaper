@@ -14,7 +14,6 @@
 \usepackage{subcaption} % Subfigures
 \usepackage{paralist} % compact lists.
 
-% A test commit by Markus
 
 \newcommand{\chunk}[2]{% 
 	\fcolorbox{black}{yellow}{\bfseries\sffamily\scriptsize#1}%
@@ -27,91 +26,73 @@
 \newcommand{\cgg}[1]{\chunk{Cl\'audio}{\textbf{\textcolor{blue}{\textsl{#1}}}}}
 
 \begin{document} 
-\title{Building the SyVOLT Tool}
+\title{SyVOLT: Architecture and Case Study}
 %\title{Full Verification of Model Transformation Contracts for Declarative ATL}
-\author{Levi L\'{u}cio, Bentley James Oakes, Cl\'audio Gomes, Gehan Selim,
-Juergen Dingel, James R. Cordy and Hans Vangheluwe}
+\author{Levi L\'{u}cio, Bentley James Oakes, Cl\'audio Gomes, Markus Voelter and Hans Vangheluwe}
 
 \author{\IEEEauthorblockN{Levi L\'{u}cio\IEEEauthorrefmark{1},
-			Bentley James Oakes\IEEEauthorrefmark{1}, 
-			Cl\'audio Gomes\IEEEauthorrefmark{2},
-			Gehan Selim\IEEEauthorrefmark{3},
-			Juergen Dingel\IEEEauthorrefmark{3},
-			James R. Cordy\IEEEauthorrefmark{3},\\ and
-			Hans Vangheluwe$^{\dagger,*}$}
-		\IEEEauthorblockA{\IEEEauthorrefmark{1}School of Computer Science,
+			Bentley James Oakes\IEEEauthorrefmark{2}, 
+			Cl\'audio Gomes\IEEEauthorrefmark{3},
+			Markus Voelter\IEEEauthorrefmark{4},\\ and
+			Hans Vangheluwe$^{* \ddagger}$}
+		\IEEEauthorblockA{\IEEEauthorrefmark{1}fortiss,
+				Munich,
+				Germany\\ levi@cs.mcgill.ca}
+		\IEEEauthorblockA{\IEEEauthorrefmark{2}School of Computer Science,
 			McGill University,
-			Canada\\ levi@cs.mcgill.ca, bentley.oakes@mail.mcgill.ca}
-		\IEEEauthorblockA{\IEEEauthorrefmark{2}MSDL Lab,
+			Canada\\ bentley.oakes@mail.mcgill.ca}
+		\IEEEauthorblockA{\IEEEauthorrefmark{3}MSDL Lab,
 			University of Antwerp,
 			Belgium\\ claudio.goncalvesgomes@ua.ac.be, hans.vangheluwe@ua.ac.be}
-		\IEEEauthorblockA{Queen's University,
-			Canada\\ \{gehan,dingel,cordy\}@cs.queensu.ca}
+		\IEEEauthorblockA{\IEEEauthorrefmark{4}voelter@acm.org\\ voelter@acm.org}
 	}
 
 \date{\today}
-
 
 \maketitle
 
 %\tableofcontents
 
-
-\begin{abstract}
-A paper on SyVOLT, should explain the tool from three points of view:
-\begin{itemize}
-  \item components of the architecture of the tool
-  \item case studies, growing in complexity
-  \item model driven engineering
-\end{itemize}
-
-\end{abstract}
-
+\input{text/abstract}
 
 \section{Introduction}
 \label{sec:intro}
 \input{text/introduction}
 
 \section{Background}
+\label{sec:background}
 \input{text/background}
 
 \section{Prover Overview}
-Just from the user point of view, how do we build the transformation and
-verify. Methodological workflow.\\\\
+\label{sec:overview}
 \input{text/highlights}
 
 \section{SyVOLT's Architecture}
+\label{sec:arch}
 \input{text/arch} 
 
 \section{The mbeddr Industrial Case Study}
 \label{sec:mbeddr_case_study}
-
 \input{text/case_study}
 
-The Idea here is to indroduce the features that had to be implemented for the
-approach to work/scale for each one of the cases studies, from the simplest to
-the most complex.\cgg{I would move this part to the discussion section. Because it is a consequence of the case study and not part of the case study itself.}
-\subsection{Slicing}
+\section{Case Study Results}
+\label{sec:results}
+\input{text/results}
 
 \section{Discussion}
-\begin{itemize}
-\item scalability
-\item insights into applying model driven techniques
-\item applicability
-\item industrial
-\end{itemize}
-use List of observations\\
-Discussing limitations of model-driven technology here.
+\label{sec:discussion}
 \input{text/discussion} 
 
 \section{Related Work}
+\label{sec:related}
 \input{text/related_work}
 
 \section{Conclusions}
+\label{sec:conclusion}
 \input{text/conclusion}
 
-\section*{Acknowledgements}
-acknowledgements here\ldots
+\section*{Acknowledgments}
+The authors thank a number of people.
 
 \bibliographystyle{abbrv}
 \bibliography{syvolt-tool}

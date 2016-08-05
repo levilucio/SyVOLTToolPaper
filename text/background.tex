@@ -1,28 +1,4 @@
-\subsection{Model Transformations}
 
-% MDD and MTs. Not very important but I do not know how far back should we start.
-Model-Driven Development (MDD) is a software engineering approach that uses
-models - typically represented as graphs - as first class citizens to create and evolve software systems
-\cite{Hailpern:2006vd}.
-Model Transformations, prescribed by Model Transformation Languages (MTLs) are the preferred approach to manipulate those models \cite{Software2003}.
-MTLs typically describe a set of rules that guide the transformation of models.
-Their productivity comes from the fact that those rules can be described
-elegantly without the accidental complexity of graph manipulation.\markus{This
-last sentence sounds weak and unclear. What is the point?}
-
-% Model translations vs Rewritting Transformations.
-Here\markus{where is here? In this paper?}, a model transformation is defined as
-a translation, as opposed to a graph rewriting process.
-In graph rewriting, a graph representing a model or a set of models\markus{Why
-is the ``set'' important here?} gets rewritten continuously according to a set
-of rules, until some termination criteria is met.
-In a model translation, there is a source model and a target model and the
-target model is the result of applying the translation to the source model.
-Operationally speaking, each of these approaches can mimic the other: graph
-rewriting can be used to perform model translations (e.g. \cite{Grunske2005})
-and model translations, \emph{when applied repetitively}, can perform graph
-rewriting.\markus{I presume you explain this because it will become important
-later. If so, please give the reader a hint. In not, remove it.}
 
 \subsection{The DSLTrans Transformation Language}
 
@@ -113,32 +89,5 @@ and a daughter, we expect to get a community model with 2 men and 2 women. The
 previous sentence represents a property about the transformation that we might
 wish to verify automatically\markus{Really? Would a verification actually talk
 about 2 men and 2 women? Wouldn't it be more general?}.
-
-\subsection{Model Transformation Verification}
-
-% What is transformation verification?
-Notice that the previous property is in the form of an implication, which must
-be true independently of the concrete input model given to the transformation.
-This means that to prove the property, it is not enough to prove that it holds
-for a single input model with a father, a mother, a son and a daughter. That
-would be just \emph{testing} the transformation.
-Rather, we must \emph{prove} that it holds for the infinitely many\markus{I
-know what you want to say. But it's not really about the *many* right? It is
-about all possible input models.} possible input models.
-
-% Motivation for automatic verification
-For small transformations it is easy to prove that they satisfy certain
-properties. However, model transformations have been successfully applied in
-industry (e.g., \cite{daghsen:hal-00660252,Giese2010}) and these transformations
--- and the models involved, as evidenced in \cite{Selim2012} and in our own case
-study Section~\ref{sec:mbeddr_case_study} -- can be quite large
-\footnote{Transformations with circa 50 rules and metamodels with more than 1500
-classes}.
-For these transformations, automatically proving their correctness is of
-utmost importance.\markus{Why?}
-
-%bridge to the next section.
-By correct transformations, we mean that they are automatically proven to satisfy the properties described by the domain expert. We abstain from prescribing which properties are of interest. Instead, we focus on the verification/proving process itself.
-
 
 
