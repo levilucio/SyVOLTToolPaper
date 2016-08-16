@@ -7,7 +7,22 @@ This section will briefly touch on the steps for how a contract is proved on a D
 \subsubsection{Generation of the Transformation and Contracts}
 The starting point for our tool is the building of the DSLTrans transformation and contracts.
 
-Previous research activities at the Modelling, Simulation and Design Lab at McGill University led to the creation of \textbf{AToM$^3$}~\cite{atom3:2002}. This visual editor allowed us to create DSLTrans transformations and contracts visually.
+Previous research activities at the Modelling, Simulation and Design Lab at McGill University led to the creation of \textbf{AToM$^3$}~\cite{atom3:2002}. This visual editor allowed us to create DSLTrans transformations and contracts visually. AToM$^3$~\cite{atom3:2002}: AToM$^3$ is a
+  meta-editor\markus{What is a meta editor? Never heard this before.} for
+  model-driven development.
+  It has been developed at the MSDL\markus{?} and is used for constructing,
+  models, metamodels and model transformation rules, and for automatically 
+  synthesising modeling environments\markus{editors, right?}.
+  AToM$^3$ has been extensively used to support the construction and
+  visualisation of models and model transformation rules required by the proof
+  engine during the initial stages of the construction of SyVOLT. 
+  Many of these artifacts were built during the construction
+  of SyVOLT explicitely to develop and test the proof algorithm in a
+  controlled environment. In the finished SyVOLT all these artifacts are automatically
+  generated from their graphical representations in the Eclipse front-end.   
+  From Atom3, the Himesis files were directly written using model-to-text code written within the Atom3 code.
+  
+  
 
 These principles were then used to build a plugin for the Eclipse development environment CITE. This allows our prover to be integrated with the rich ecosystem of Eclipse. An example of a transformation within the Eclipse plugin is seen in Figure~\ref{fig:eclipse_frontend}.
 
@@ -147,22 +162,28 @@ We present our model-based implementation in an effort to promote this approach 
 
 \begin{figure*}
 \centering
-\includegraphics[width=0.8\textwidth]{figures/syvolt_prover/tooling_arch}
-\caption{The architecture of the SyVOLT tool}
-\label{fig:arch}
+\includegraphics[width=0.8\textwidth]{figures/syvolt_prover/syvolt_frontend}
+\caption{The front-ends of the SyVOLT tool}
+\label{fig:frontend}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.8\textwidth]{figures/syvolt_prover/syvolt_backend}
+\caption{The back-end of the SyVOLT tool}
+\label{fig:backend}
 \end{figure*}
 
 
-Figure~\ref{fig:arch} shows the
+Figure~\ref{fig:frontend}  and Figure~\ref{fig:backend} shows the
 architecture of the SyVOLT tool. Two essential blocks are depicted: the
-graphical front-end and the proof engine back-end. While the front-end
+graphical front-ends available and the proof engine back-end. While the front-end
 is responsible for the interaction with SyVOLT's user, the back-end implements
 the algorithm for running the proofs of the contracts.
 
-Note that two kinds of
-communication occur between SyVOLT's front-end and back-end: in the
+Note that two kinds of communication occur between SyVOLT's front-end and back-end: in the
 left-to-right direction, a number of artifacts (models and model
-transformations) are syntesized from the graphical representations of the
+transformations) are synthesized from the graphical representations of the
 DSLTrans transformations and of the SyVOLT contracts, and passed to the
 back-end. In the reverse direction, the proof result and counter-examples, if
 any, are passed from the proof engine back-end to the front-end.
@@ -171,22 +192,6 @@ any, are passed from the proof engine back-end to the front-end.
 \subsubsection{Generation of Transformation and Contracts}
 
 As explained above, there are a number of ways to generate transformations and contract for the proving process. This section will describe the technologies behind these front-ends.
-
-\paragraph{Atom3}
-
-\textbf{AToM$^3$}~\cite{atom3:2002}: AToM$^3$ is a
-  meta-editor\markus{What is a meta editor? Never heard this before.} for
-  model-driven development.
-  It has been developed at the MSDL\markus{?} and is used for constructing,
-  models, metamodels and model transformation rules, and for automatically 
-  synthesising modeling environments\markus{editors, right?}.
-  AToM$^3$ has been extensively used to support the construction and
-  visualisation of models and model transformation rules required by the proof
-  engine during the initial stages of the construction of SyVOLT. 
-  Many of these artifacts were built during the construction
-  of SyVOLT explicitely to develop and test the proof algorithm in a
-  controlled environment. In the finished SyVOLT all these artifacts are automatically
-  generated from their graphical representations in the Eclipse front-end.\\
   
 \paragraph{Eclipse Plugin}
 
@@ -276,9 +281,7 @@ that? WHy is this a good thing for Himesis?}.
   transformation rules required by the proof algorithm.
 
 
-\paragraph{Atom3}
 
-From Atom3, the Himesis files were directly written using model-to-text code written within the Atom3 code.
 
 \paragraph{Eclipse Plugin}
 
@@ -311,6 +314,11 @@ memory once they are instantiated by the proof engine back-end.
 \paragraph{MPS}
 
 To be completed...
+
+\paragraph{Ecore Import}
+
+We also plan for direct importation of Ecore model files, such that a further range of tools can be used to generate transformations and contracts.
+
 
 \subsubsection{Additional Generation of Model Transformations for Proof
 Construction: The PyRamify Script (3)}
