@@ -91,7 +91,7 @@ output model of a DSLTrans transformation, but never remove them.
 As the transformation is made of layers, the symbolic execution process moves
 through each layer and determines how rules may interact with each other. Unlike generating the powerset of all rules, these
 rule interactions may in fact decrease the number of path conditions generated
-by the prover as certain combinations of rules are proven infeasible.
+by the prover as certain combinations of rules are proven infeasible. More information on the specific cases of rule interactions can be found in~\cite{Oakes2016}.
 
 For example, consider a rule R1 which matches on an \textit{A} element, and a
 rule R2 which matches on an \textit{A} element connected to a \textit{B}
