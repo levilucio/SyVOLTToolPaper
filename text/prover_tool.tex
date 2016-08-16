@@ -7,24 +7,10 @@ This section will briefly touch on the steps for how a contract is proved on a D
 \subsubsection{Generation of the Transformation and Contracts}
 The starting point for our tool is the building of the DSLTrans transformation and contracts.
 
-Previous research activities at the Modelling, Simulation and Design Lab at McGill University led to the creation of \textbf{AToM$^3$}~\cite{atom3:2002}. This visual editor allowed us to create DSLTrans transformations and contracts visually. AToM$^3$~\cite{atom3:2002}: AToM$^3$ is a
-  meta-editor\markus{What is a meta editor? Never heard this before.} for
-  model-driven development.
-  It has been developed at the MSDL\markus{?} and is used for constructing,
-  models, metamodels and model transformation rules, and for automatically 
-  synthesising modeling environments\markus{editors, right?}.
-  AToM$^3$ has been extensively used to support the construction and
-  visualisation of models and model transformation rules required by the proof
-  engine during the initial stages of the construction of SyVOLT. 
-  Many of these artifacts were built during the construction
-  of SyVOLT explicitely to develop and test the proof algorithm in a
-  controlled environment. In the finished SyVOLT all these artifacts are automatically
-  generated from their graphical representations in the Eclipse front-end.   
-  From Atom3, the Himesis files were directly written using model-to-text code written within the Atom3 code.
-  
-  
+During the initial construction stages of our prover tool, we extensively relied on the AToM$^3$ editor~\cite{atom3:2002} to construct the models and internal artifacts required by the proving process.  AToM$^3$ is a visual editor for model-driven development, and can be used for constructing,  models, metamodels and model transformation rules, and for automatically 
+ synthesising modeling editors. This editor arose from previous research activities at the Modelling, Simulation and Design Lab at McGill University, where the majority of the development of our proving technique has taken place.
 
-These principles were then used to build a plugin for the Eclipse development environment CITE. This allows our prover to be integrated with the rich ecosystem of Eclipse. An example of a transformation within the Eclipse plugin is seen in Figure~\ref{fig:eclipse_frontend}.
+The modelling principles and lessons learned from AToM$^3$ were then applied to build a plugin for the Eclipse development environment CITE. This allows our prover to be integrated with the rich ecosystem of Eclipse, furthering the applicability of our technique. This plugin allows for the creation of DSLTrans transformations and contracts within a visual editor, seen in Figure~\ref{fig:eclipse_frontend}. The contract proving step is then activated from within Eclipse, returning results in the same window. This avoids the user having to access another tool to verify the contract.
 
 \begin{figure}
 \centering
@@ -341,7 +327,7 @@ syntactically)!}
 This additional model transformation generation step is achieved by the PyRamify
 component. PyRamify is a Python script\markus{program instead of script?} that
 takes as input Himesis graphs representing the rules in the transformation.
-Then, through the RAMification procedure~\ref{KuhneMSVW09}, T-Core matchers and
+Then, through the RAMification procedure~\cite{KuhneMSVW09}, T-Core matchers and
 rewriters for each rule are produced. Very briefly, while matchers allow the
 contract prover to determine how rules might execute over a path condition being
 built, rewriters properly combine the right-hand side of a DSLTrans rule with

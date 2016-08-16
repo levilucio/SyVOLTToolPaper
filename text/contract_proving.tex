@@ -107,7 +107,7 @@ apply part of the rule was created from the connected element in the match part 
 As path conditions are constructed through reasoning about the interaction of
 transformation rules, the structure of a path condition is very similar to that
 of a DSLTrans rule with a match graph and an apply graph, as seen in
-Figure~\ref{fig:pc}.
+Figure~\ref{fig:pc_first}.
 
 The meaning of a particular path condition is, `if the elements in the top component of the path condition are in the input model, then the elements in the bottom component will be in the output model.' Recall that this matches the intended meaning of a contract: `if the elements in
 the pre-condition are found in the transformation's input model, then the
@@ -131,7 +131,7 @@ daughter will always produce a community with a man'.  It is easy to see that an
  daughter elements should not produce a man in the target community.
 
 Our contract prover will then find multiple
- counter-example path conditions which cause the contract to not hold, such as the path condition in Figure~\ref{fig:pc}. Note that the
+ counter-example path conditions which cause the contract to not hold, such as the path condition in Figure~\ref{fig:pc_first}. Note that the
 pre-condition of the contract does match onto the top component of the path condition, while the
 \textit{Man} element in the contract post-condition cannot be found in the bottom component of the path condition. Thus the failure of this contract gives further
 assurance that the transformation is working correctly, as \textit{daughters}
@@ -178,7 +178,7 @@ examples is well established, eg in model checkers.}
 
 Note that, despite the fact that the pre-condition of the
 \textit{Daughter\-Mother} contract cannot be (isomorphically) matched in the path
-condition in Figure~\ref{fig:pc}, the pre-condition of the contract is still
+condition in Figure~\ref{fig:pc_first}, the pre-condition of the contract is still
 found in that path condition. This is so because there are input models
 matched by these two rules where the two distinct \textit{Family} elements
 belonging to the two separate rules will match over the same family instance --
