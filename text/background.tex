@@ -1,4 +1,4 @@
-In this section, we introduce the model transformation language DSLTrans used in this paper.
+In this section, we introduce the model transformation language DSLTrans which is at the heart of our technique.
 
 \subsection{The DSLTrans Transformation Language}
 
@@ -8,23 +8,20 @@ transformation engine that has two important properties enforced by construction
 are both \emph{terminating} and \emph{confluent}~\cite{Barroca2011}.
 These properties stem from the fact that DSLTrans does not allow
 unbounded loops during execution, making it a Turing-incomplete
-computing language~\cite{Barroca2011}\footnote{This result assumes that finite models are
-used.}. Besides their obvious importance in
+computing language~\cite{Barroca2011}. Besides their obvious importance in
 practice, \emph{termination} and \emph{confluence} were instrumental in the
 implementation of our verification technique for pre-/post-condition contracts.
 
-Note that to provide this verification ability, it is not possible to delete elements in DSLTrans.
-Despite the apparent lack of expressivity, our experience has showed that it is
-possible to specify a wide range of transformations using DSLTrans, including a previous industrial example CITE SELIM.
+Note that to provide this verification ability, it is not possible to delete elements in DSLTrans, and all input models must be finite. Despite the apparent lack of expressivity, our experience has showed that it is
+possible to specify a wide range of transformations using DSLTrans, including a previous industrial example~\cite{Selim2014} and the case study discussed in Section~\ref{sec:mbeddr_transformation}.
 
 Model transformations are expressed in DSLTrans as sets of graph rewriting
 rules, having an upper part (named \emph{MatchModel}), a lower part (\emph{ApplyModel}) and,
-optionally, negative application conditions. The main construction
-used in the scheduling of model transformation rules in DSLTrans is a
-\emph{layer}. Each model transformation rule in a layer cannot match over the output of any other rule in the same layer. As well, rules cannot modify the input graph during the rewriting phase (termed \emph{out-place} execution). Layers are organized sequentially and
-the output model that results from executing a given layer is passed as input to
-the next layer in the sequence.
+optionally, negative application conditions.
 
+The main construction used in the scheduling of DSLTrans model transformation rules is a
+\emph{layer}. These layers are in a particular order, and each contains a set of \emph{rules}. The rules inside the same layer are executed independently of one another, i.e., there is no order of execution of rules, and each rule in a layer cannot match over the output of any other rule in the same layer. As well, rules cannot modify the input graph during the rewriting phase (termed \emph{out-place} execution). Layers are organized sequentially and therefore the output model that results from executing a given layer is passed as input to
+the next layer in the sequence.
 
 A DSLTrans rule can match over the elements of the input model of the
 transformation and also over elements that have been generated so far in the
@@ -69,30 +66,13 @@ conditions} that allow the transformation designer to specify conditions under
 which a rule should not match. These constructs are not currently used in
 our verification approach, and the interested reader is referred to~\cite{Barroca2011} for further information.
 
-DSLTrans transformations are organized in partially ordered
-layers.
-Each layer is executed after its previous layer. Each layer has a set of rules.
-The execution of a layer means the execution of the rules that comprise that
-layer.
-The rules inside the same layer are executed independently of one another, i.e.,
-there is no order of execution of rules and they cannot affect the execution
-(e.g., enable or disable) of one another. 
-
-
 
 \subsection{Families-To-Persons Example}
-
-%Why use the families to persons example.
-To present the syntax and semantics of DSLTrans, we will be using the \FTP from the ATL transformation zoo \footnote{\url{http://www.eclipse.org/atl/atlTransformations}}.
-Because this transformation can be easily understood, it allows us to focus on the essential concepts of DSLTrans.
-
 
 As our introductory example to the syntax and semantics of DSLTrans, we present the \FTP transformation previously described in \cite{Oakes2016}. The original \FTP transformation can be
 found in the ATL zoo~\cite{atlZoo}, and has also been discussed in a number of related works on verification and testing~\cite{Gogolla2011}.
 
-We chose this \FTP transformation as our introductory example as it transforms domains whose concepts are easily understandable by anyone (cf. Section~\ref{sec:trans_domain}).
-
-\subsection{Transformation Domains}\label{sec:trans_domain}
+We chose this \FTP transformation as our introductory example as it translates between easily-understood domains, as described below.
 
 \begin{figure}[bt]
 \centering
@@ -144,52 +124,11 @@ Finally, associations, town halls, committees, districts and facilities have a \
 Figure~\ref{fig:DSLTrans_rules} displays the Families-To-Persons DSLTrans transformation . Let us mention here that we have removed five rules from the figure to improve visual clarity.
 There is a vertical dotted blue line for each of these rules, located where the rules have been removed. The missed rules are similar to those that surround them, and can therefore be safely ignored in our explanation.
 
+Note that this DSLTrans transformation has been automatically created from a declarative ATL version, as discussed in~\cite{Oakes2016}. This is the reason that only one rule is in each layer.
 
-\bentley{Should describe the transformation here. Also point to Oakes2016 to say that this transformation was automatically generated from ATL}
+The first six rules shown in Figure~\ref{fig:DSLTrans_rules} are those that create elements in the output model whenever their MatchModel is found in the input model. The following eight rules presented connect those elements with associations, where the elements to be connected are found by backward links.
 
-%As explained in Section~\ref{sec:dsltrans}, each DSLTrans rule has a \emph{MatchModel} and an \emph{ApplyModel}.
-%As we can see, each of them has a left-hand side (LHS) and a right-hand side (RHS)\levi{not sure about the LHS/RHS reference here\ldots}.
-%There are elements of a specific type and associations among them displayed in
-% both the upper part (named \emph{MatchedModel} in DSLTrans) and lower part (called \emph{ApplyModel}) of the rules.
-%In each side, elements of a specific type and relationships among them are displayed.
-%Elements can also have attributes.
-%Rule \emph{Households2Community} corresponds to rule R1 in
-%Listing~\ref{lst:Families2Persons}, \emph{Father2Man} corresponds to rule R2 and \emph{UnionFather}
-%to binding B11.
-
-%They appear in the \emph{ApplyModel} when they have to be initialized, and
-%in the \emph{MatchedModel} when they are used to initialize attributes in the \emph{ApplyModel}.
-%For instance, attributes \emph{fullName} and \emph{lastName} of \emph{Member} and \emph{Family} in rule \emph{Father2Man} are used
-%to initialize attribute \emph{fullName} of \emph{Man}.
-%%
-%%Other than these attributes, there are others in the RHS which appear in an element
-%%whenever such element is going to be used in backward links, and they also appear when they are being used in such links. These attributes are always referred to with the name \emph{ApplyAttribute}.
-%%For instance, we can see in rule \emph{Households2Community}, which is created for R1 in Listing~\ref{lst:Families2Persons}, that a \emph{Community} is created for a \emph{Households}.
-%%Besides, since these two elements are going to be used later in a backward link, the \emph{ApplyAttribute} attribute is set in \emph{Community}. Note that the \emph{ApplyAttribute} attribute of an element must be created when the element is created, and the rule where it is created must be in the sequence of rules before the rule that uses the element in a backward link.
-%
-%Rule \emph{Households2Community} corresponds to R1 in
-%Listing~\ref{lst:Families2Persons}, although the reference \emph{has} is not
-%initialized in this rule.
-%
-%Rule \emph{Father2Man} corresponds to R2. We can see how the two elements in the
-%\emph{from} part of the ATL rule appear in the \emph{MatchedModel} of the DSLTrans rule, as well
-%as the filter used in ATL, which is represented as an association. The
-%element \emph{Man} appears in the \emph{ApplyModel}, and its \emph{fullName} attribute is
-%updated with the concatenation of the \emph{firstName} and \emph{lastName}
-%attributes. A similar rule, not shown here, creates elements of type
-%\emph{Woman}, which corresponds to R3 in Listing~\ref{lst:Families2Persons}.
-%
-%The last rule is used to set the \emph{has} relation between a \emph{Community}
-%and a \emph{Man}. Here, backward links are used. The first one is to indicate
-%that the \emph{Community} element has been created from a \emph{Households}
-%element (which was done in rule \emph{Households2Community}). The other two
-%backward links state that the \emph{Man} is created from a \emph{Family} and a
-%\emph{Member} that are linked with the relation \emph{father} (such as in rule
-%\emph{Father2Man}). This rule corresponds to binding B11 in
-%Listing~\ref{lst:Families2Persons}. There is a similar rule, not shown in the
-%figure, for initializing the \emph{has} association between \emph{Community} and
-%\emph{Woman}, what corresponds to B12.
-
+For example, the rule \emph{Country2Community} will create a \emph{Community} element for every \emph{Country} in the input model. The rule \emph{Daughter2Woman} will match over a \emph{Child} element connected to a \emph{Family} using a \emph{daughters} association, and produce a \emph{Woman} element. Then, the rule \emph{copersonsSolveRefCountryFamilyChildCommunityWoman}\footnote{The names were automatically generated by the higher-order transformation.} will link the \textit{Woman} to the appropriate \textit{Community} using a \textit{has} association. Note that the appropriate elements are determined by the backward link connecting the \emph{Community} and \emph{Country} elements, as well as the backward link connecting the \emph{Child} and \emph{Woman} elements. 
 
 
 Note that attribute copies are represented with arrows from the \emph{ApplyModel} of the rule to the \emph{MatchModel}, such as in rule \emph{Neighborhood2District}, where the created \emph{District} gets the same name as the matched \emph{Neighborhood}.
