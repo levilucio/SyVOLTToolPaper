@@ -1,4 +1,13 @@
-\subsection{SyVOLT Prover Tool}
+This section will discuss the components of our SyVOLT prover tool. In particular, the first section will focus on a high-level discussion of how transformations and contracts are consumed into the prover, the proving process, and what information is presented back to the user. The second section takes a deeper look into each of these components, focusing on the essential technologies.
+
+\subsection{Tool Overview}
+This section will briefly touch on the steps for how a contract is proved on a DSLTrans transformation using our contract proving tool.
+
+
+\subsubsection{Generation of Transformation}
+The starting point for our tool is the building of the DSLTrans transformation.
+
+
 
 Just from the user point of view, how do we build the transformation and
 verify. Methodological workflow.\\\\
@@ -90,7 +99,7 @@ all cases.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.45\textwidth]{figures/output}
+\includegraphics[width=0.45\textwidth]{figures/syvolt_prover/output}
 \caption{The results of the contract prover}
 \label{fig:output}
 \end{figure}
@@ -199,7 +208,7 @@ the Himesis format~\cite{Provost2006} to represent models.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.45\textwidth]{figures/eclipse_frontend}
+\includegraphics[width=0.45\textwidth]{figures/syvolt_prover/eclipse_frontend}
 \caption{The transformation editor within Eclipse}
 \label{fig:eclipse_frontend}
 \end{figure}
@@ -207,7 +216,7 @@ the Himesis format~\cite{Provost2006} to represent models.
 \subsection{Tool Architecture}
 \begin{figure*}
 \centering
-\includegraphics[width=0.8\textwidth]{figures/syvolt_arch}
+\includegraphics[width=0.8\textwidth]{figures/syvolt_prover/tooling_arch}
 \caption{The architecture of the SyVOLT tool}
 \label{fig:arch}
 \end{figure*}
