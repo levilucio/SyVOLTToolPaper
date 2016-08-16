@@ -101,6 +101,78 @@ As well, DSLTrans rules can also define \textit{backward links}, as described fo
 apply part of the rule was created from the connected element in the match part of the rule, by matching over traceability links created during the execution of the transformation. This functionality is therefore similar to the implicit binding step present in ATL, as discussed in Section~\ref{sec:ATL_DSLTrans} under the title \textit{Generic Semantics for Step 2}. During path condition construction, these backward link dependencies prevent some rules from executing, further decreasing the rule combinations possible.
 
 
+\subsection{Contract Proving Process}
+\label{subsub:contract_proving}
+
+As path conditions are constructed through reasoning about the interaction of
+transformation rules, the structure of a path condition is very similar to that
+of a DSLTrans rule with a match graph and an apply graph, as seen in
+Figure~\ref{fig:pc}.
+
+The meaning of a particular path condition is, `if the elements in the top component of the path condition are in the input model, then the elements in the bottom component will be in the output model.' Recall that this matches the intended meaning of a contract: `if the elements in
+the pre-condition are found in the transformation's input model, then the
+post-condition elements should be found in the output model'. Therefore, to prove that a
+contract holds or not on a path condition, it is sufficient to see whether the
+elements in the contract can be matched onto the path condition, as described
+in~\cite{Lucio2014}.
+
+
+There are three cases for determining the status of a contract:
+\begin{itemize}
+\item If the pre-condition of the contract, including backward links, does not match the path condition, then the contract is not applicable for that path condition.
+\item If both the pre-condition and post-condition match, then the contract does hold on that path condition.
+\item If the pre-condition matches, but the post-condition does not match, then the contract does not hold on that path condition.
+\end{itemize}
+
+Note that a contract may be expected to not hold in all cases for a
+transformation. For example, consider the contract \textit{Daughter\-Mother},
+reproduced in Figure~\ref{fig:daughterMother}. The informal statement for this contract is `a family with a mother and a
+daughter will always produce a community with a man'.  It is easy to see that an input model which contains only mother and
+ daughter elements should not produce a man in the target community.
+
+Our contract prover will then find multiple
+ counter-example path conditions which cause the contract to not hold, such as the path condition in Figure~\ref{fig:pc}. Note that the
+pre-condition of the contract does match onto the top component of the path condition, while the
+\textit{Man} element in the contract post-condition cannot be found in the bottom component of the path condition. Thus the failure of this contract gives further
+assurance that the transformation is working correctly, as \textit{daughters}
+and \textit{mothers} are not accidentally transformed into \textit{men}. As this result is expected, this allows the transformation builder to have increased confidence in the validity of the transformation.
+
+
+  \begin{figure}[t]
+    \begin{center}
+      \includegraphics[width=0.45\textwidth]{figures/FamToPersons/Neg_DaughterMother}
+      \caption{A contract to verify whether a \emph{Man} element will be produced from a \emph{Family} containing a \emph{daughter} element and a \emph{mother} element - this contract will not hold}
+      \label{fig:daughterMother}
+    \end{center}
+    \vspace{-0.20in}
+  \end{figure}
+
+If a contract fails to hold on the transformation and it was not expected to fail, then this indicates an error with either the contract or the transformation. The prover will report (and optionally draw) the path conditions which the contract did not hold on. As well, a minimal path condition is reported, which represents the smallest combination of rules that fails. This allows the transformation developer to identify those rule combinations wherein an error may occur, and change the transformation or contract accordingly. Note that our technique only identifies the path conditions where a problem arises. Identification of the erroneous elements and suggestions for repair are not handled at this time.
+
+Note that, despite the fact that the pre-condition of the
+\textit{Daughter\-Mother} contract cannot be (isomorphically) matched in the path
+condition in Figure~\ref{fig:pc}, the pre-condition of the contract is still
+found in that path condition. This is so because there are input models
+matched by these two rules where the two distinct \textit{Family} elements
+belonging to the two separate rules will match over the same family instance --
+remember that in DSLTrans rules can match over the same elements in the input
+model. The relation between the pre-condition of contracts and path condition is
+thus such that, any possibility of overlaps (or absence thereof) between
+elements of the same type belonging to two or more different rules in the path condition,
+is considered as a matching possibility for the pre-condition of the
+contract.
+
+The relation between the contract and path condition packs thus more
+information than a simple graph isomorphism. It is a mixed partial surjective /
+injective homomorphism between the path condition and the contract typed graphs:
+while the surjection allows ``forgetting'' that two or more elements in a path condition belong to
+different rules, the injection guarantees that elements belonging to the
+same rule in the path condition have an isomorphic counterpart in the property.
+Further examples, as well as a formalization of this relation can be found in~\cite{Lucio2014}.
+
+ In the case that the contract must explicitly reason about the multiplicity of \textit{Family} elements, the contract language includes
+ propositional logic, as in Section~\ref{subsubsec:contract_examples}.
+
 
 
 
