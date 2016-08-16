@@ -1,23 +1,64 @@
-We have some evidence that SyVOLT scales to transformations of practical
-interest. This has been empirically shown by applying it to DSLTrans
-transformations up to over 60 rules, and ATL transformations up to 13
-rules~\cite{Oakes2016}. From our own experience with DSLTrans, the size of a
-DSLTrans transformations varies widely, with the average size ranging from 10 up
-to 50 rules. The average size of an ATL transformation is around 20 rules. [cite
-Manuel's paper, should we keep this?].\markus{Well, if we look at the case study
-in this paper (mbeddr), then we can definitely see that to really verify mbeddr,
-we'll have waaay more rules.} Even though our technique is exhaustive, our
-approach takes relatively short amounts of time to prove contracts. For example,
-our experiments with industrial transformations~\cite{Oakes2016} show that contracts
-can be verified within a few minutes. In Gehan Selim's PhD
-thesis~\cite{Selim2015} further evidence of SyVOLT's performance is given when
-verifying a relatively large model transformation for giving semantics to the
-UML-RT language in terms of the Kiltera process language~\cite{PosseDingel2014}.
-SyVOLT's symbolic execution engine is fully
-homegrown~\cite{LucioVang}\markus{Does ``homegrown'' have positive connotations?
-Not sure.} and does not depend on third-party solvers. Although this has implied
-a large effort to build the codebase, it has also allowed us to have the
-required control over the code to iteratively optimize the engine for both space
-and time economy.
-\cite{Selim2014} demonstrates that our prover is substantially faster than
-similar approaches based on SAT solvers.
+In this section we present an evaluation of our contract-proving technique on the mbeddr case study. In particular, we are interested in the following
+research questions:
+
+\begin{itemize}
+\item RQ1: How much time and memory does the contract prover use to prove the contracts?
+\item RQ2: Does slicing the transformation for a contract produce the same result as verification on the whole transformation?
+\item RQ3: In the cases where a contract fails, how can we assist the user in understanding why?
+\end{itemize}
+
+In order to minimize the time required to prove the contracts, slicing was performed. This technique selects only those rules in the transformation that are required for verification of that contract. More information is presented in~\cite{Oakes2016}.
+
+\subsection{Measures}
+
+To objectively answer our defined research questions, contract prover experiments were conducted for all contracts. For each case study, the success of our contract prover rests on whether the contracts we have indicated hold or do not hold on all path conditions (as appropriate).
+
+The following information was collected during the contract proving process:
+
+\begin{itemize}
+\item Number of rules in each transformation
+\item Number of path conditions produced by the contract prover
+\item Time required in order to generate all path conditions
+\item Number of contracts to be proved on the case study
+\item Time required to prove the contracts
+\item Maximum memory usage required by the contract prover
+\end{itemize}
+
+
+The experiments were run on a 2013 Macbook Air with an Intel Core i5-4250U and 8 GB of RAM, running on Arch Linux and Python 3.5.1. Both the path condition construction and contract proving processes were parallelized amongst four threads. Each experiment was conducted at least five times, with results averaged. Timing information was obtained by using the Python timing package \textit{time}. Memory information was obtained using the \texttt{/usr/bin/time} command. Note that the memory usage information will also record the space overhead required by the Python interpreter.
+
+All the artifacts used for our experiments can be found on our website~\cite{NEW WEBSITE NEEDED}.
+
+
+\subsection{Results}
+
+
+Table~\ref{table:performance} shows the performance results for proving the contracts on our case studies. We shall now discuss these results in the context of our research questions.
+
+\begin{table*}[tb]
+\caption{Performance results}
+\label{table:performance}
+\begin{tabular}{l | p{2.5cm}| | r |r || r |r || r}
+ &  \textbf{DSLTrans Rules}&  \textbf{Path Conds.}  & \textbf{Time (s)} & \textbf{Contracts} & \textbf{Time (s)}& \textbf{Memory}\\
+ & \centering \textbf{Rules}&  \textbf{Generated}&  &  \textbf{Proved}& & \textbf{(MB)} \\ \hline\hline
+Full Transformation & \centering 9 & 101 & 0.24 & 4 & 0.52& 54\\\hline
+Sliced Contract 1 & \centering19 & 366	& 3.89 & 10	& 7.35 & 59\\\hline
+Sliced Contract 2& \centering 9 & 13 & 0.18 & 9 & 0.15 & 58\\
+\end{tabular}
+\newline
+
+%\vspace{-0.25in}
+\end{table*}
+
+
+\subsubsection{RQ1: Performance}
+
+As seen in~\cite{Oakes2016}, our prover scales well to reasonably-sized transformations. In that work, transformation up to 19 rules were verified. Even though our technique is exhaustive, our
+approach takes relatively short amounts of time to prove contracts. \cite{Selim2014} demonstrates that our prover is substantially faster than similar approaches based on SAT solvers.
+
+\subsubsection{RQ2: Slicing}
+
+\subsubsection{RQ3: Explaining Contract Failure}
+
+
+
