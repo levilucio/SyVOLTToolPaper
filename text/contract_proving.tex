@@ -149,6 +149,33 @@ and \textit{mothers} are not accidentally transformed into \textit{men}. As this
 
 If a contract fails to hold on the transformation and it was not expected to fail, then this indicates an error with either the contract or the transformation. The prover will report (and optionally draw) the path conditions which the contract did not hold on. As well, a minimal path condition is reported, which represents the smallest combination of rules that fails. This allows the transformation developer to identify those rule combinations wherein an error may occur, and change the transformation or contract accordingly. Note that our technique only identifies the path conditions where a problem arises. Identification of the erroneous elements and suggestions for repair are not handled at this time.
 
+
+
+\bentley{Integrate the below text}
+When a contract is proved to be violated by a given model transformation, it is
+useful to also provide an input model -- called a \emph{counter-example} -- so
+that the user can execute the model transformation with that input and verify
+that indeed it violates the contract.\markus{The counter example is also used
+to show an example. It doesn't literally have to be executed.}
+
+An advantage of out technique is that the counter-example produced by SyVolt
+describes a family\markus{How is it a family? Isn't it one example model?} of
+input models that violate the contract.
+This means that any input model that belongs to the family of the
+counter-example -- i.e., fits the description given by the contract proving
+process -- causes the model transformation to violate the contract. \cgg{Levi,
+did you also show that any model that does not belong to the family does not
+cause the model transformation to violate the contract?} Thus, the user can
+easily determine the error in the transformation and correct it. We suggest that
+this supports a transformation development method analogous to 'test-driven
+development'. In this method, development would be routinely punctuated by
+contract proof in order to catch errors early and store test cases -- the
+counter examples produced -- to be used in the future.
+\markus{I think you should mention that the notion of producing counter
+examples is well established, eg in model checkers.}
+
+
+
 Note that, despite the fact that the pre-condition of the
 \textit{Daughter\-Mother} contract cannot be (isomorphically) matched in the path
 condition in Figure~\ref{fig:pc}, the pre-condition of the contract is still
