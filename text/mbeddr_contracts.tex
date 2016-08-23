@@ -135,6 +135,18 @@ operation reference is not assigned anywhere else.
 
 Figure~\ref{fig:assignment_instance} shows the AssignmentInstance contract. This contract...
 
+\subsection{Contract 2: GlobalVar}
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=0.48\textwidth]{figures/mbeddr/contracts/GlobalVar}
+  \caption{GlobalVar contract}
+  \label{fig:global_var}
+\end{center}
+\end{figure}
+
+Figure~\ref{fig:global_var} shows the GlobalVar contract. This contract...
+
 \subsection{Contract Discussion}
 
 Note that there are a number of limitations on what can be verified on this transformation. First, due to the symbolic execution nature of the approach, it is not possible to verify instance data. For example, that all components have a valid name. Second, it is difficult if not impossible to validate semantic properties, such as...

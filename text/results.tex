@@ -41,8 +41,8 @@ Table~\ref{table:performance} shows the performance results for proving the cont
 \begin{tabular}{l | p{2.5cm}| | r |r || r |r || r}
  &  \textbf{DSLTrans Rules}&  \textbf{Path Conds.}  & \textbf{Time (s)} & \textbf{Contracts} & \textbf{Time (s)}& \textbf{Memory}\\
  & \centering \textbf{Rules}&  \textbf{Generated}&  &  \textbf{Proved}& & \textbf{(MB)} \\ \hline\hline
-Full Transformation & \centering 9 & 101 & 0.24 & 4 & 0.52& 54\\\hline
-Sliced Contract 1 & \centering19 & 366	& 3.89 & 10	& 7.35 & 59\\\hline
+Full Transformation & \centering 47 & - & - & - & -& -\\\hline
+Sliced Contract 1 & \centering 25 & 6064	& 51.14 & 1	& 19.92 & 158\\\hline
 Sliced Contract 2& \centering 9 & 13 & 0.18 & 9 & 0.15 & 58\\
 \end{tabular}
 \newline
@@ -60,5 +60,24 @@ approach takes relatively short amounts of time to prove contracts. \cite{Selim2
 
 \subsubsection{RQ3: Explaining Contract Failure}
 
+Name:AssignmentInstance
+	Num Succeeded Contracts: 40
+	Num Failed Contracts: 40
+	
+Good rules: (Rules in success set and not failure set)
+['Hlayer1rule10']
+
+
+Bad rules: (Rules common to all in failure set)
+[]
+
+Contract requires elements of type:
+
+
+Contract requires links of type:
+
+	AtomicComponent - directLink\_S ( return attr\_value  "contents")  - RequiredPort
+	
+	StructDeclaration - directLink\_T ( return attr\_value  "members")  - Member
 
 
